@@ -1,0 +1,355 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+ 
+@layer base {
+  :root {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 263 28% 54%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 263 28% 54%;
+  }
+}
+ 
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+:root {
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #242424;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  font-weight: 500;
+  color: #646cff;
+  text-decoration: inherit;
+}
+a:hover {
+  color: #535bf2;
+}
+
+body {
+  margin: 0;
+  display: flex;
+  place-items: center;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
+}
+
+button {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: #1a1a1a;
+  cursor: pointer;
+  transition: border-color 0.25s;
+}
+button:hover {
+  border-color: #646cff;
+}
+button:focus,
+button:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    color: #213547;
+    background-color: #ffffff;
+  }
+  a:hover {
+    color: #747bff;
+  }
+  button {
+    background-color: #f9f9f9;
+  }
+}
+
+
+@font-face {
+  font-family: 'AurekBesh';
+  src: url('/fonts/AurekBesh.woff') format('woff'),
+       url('/fonts/AurekBesh.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'AurekBeshNarrow';
+  src: url('/fonts/AurekBeshNarrow.woff') format('woff'),
+       url('/fonts/AurekBeshNarrow.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Chandrila';
+  src: url('/fonts/Chandrila.woff') format('woff'),
+       url('/fonts/Chandrila.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Chandrila-Regular';
+  src: url('/fonts/Chandrila-Regular.woff') format('woff'),
+       url('/fonts/Chandrila-Regular.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'ErosBookRegular';
+  src: url('/fonts/ErosBookRegular.woff') format('woff'),
+       url('/fonts/ErosBookRegular.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'HandelGotComDLig';
+  src: url('/fonts/HandelGotComDLig Regular.woff') format('woff'),
+       url('/fonts/HandelGotComDLig Regular.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'HandelGotComDMed';
+  src: url('/fonts/HandelGotComDMed Regular.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'HandelGotDBol';
+  src: url('/fonts/HandelGotDBol Regular.woff') format('woff'),
+       url('/fonts/HandelGotDBol Regular.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'HandelGotDLig';
+  src: url('/fonts/HandelGotDLig Regular.woff') format('woff'),
+       url('/fonts/HandelGotDLig Regular.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'HandelGotDMed';
+  src: url('/fonts/HandelGotDMed Regular.woff') format('woff'),
+       url('/fonts/HandelGotDMed Regular.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'HandelGothic';
+  src: url('/fonts/HandelGothic Regular.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Sterilict';
+  src: url('/fonts/Sterilict.woff') format('woff'),
+       url('/fonts/Sterilict.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'SpaceStencil';
+  src: url('/fonts/space-stencil.woff') format('woff'),
+       url('/fonts/space-stencil.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: "Eros Book";
+  src:
+    url('/fonts/ErosBookRegular.woff') format('woff'),
+    url('/fonts/ErosBookRegular.ttf') format("truetype");
+}
+
+@font-face {
+  font-family: "Handel";
+  src:
+    url('/fonts/HandelGotDMed\ Regular.woff') format('woff'),
+    url('/fonts/HandelGotDMed\ Regular.ttf') format("truetype");
+}
+
+@keyframes space-gauge-float {
+  0% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.5;
+  }
+  90% {
+    opacity: 0.5;
+  }
+  100% {
+    transform: translateY(-100vh) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+.space-gauge-float {
+  animation: space-gauge-float linear infinite;
+}
+
+.space-gauge-bg {
+  background-image: radial-gradient(circle, #1a2030 0%, #0c1016 70%);
+}
+
+.space-gauge-pulse {
+  animation: space-gauge-pulse 0.5s infinite alternate;
+}
+
+@keyframes space-gauge-pulse {
+  0% { box-shadow: 0 0 30px rgba(255, 0, 0, 0.3); }
+  100% { box-shadow: 0 0 50px rgba(255, 0, 0, 0.7); }
+}
+
+.space-gauge-spin {
+  animation: space-gauge-spin 4s linear infinite;
+}
+
+@keyframes space-gauge-spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.banner {
+  position: fixed;
+  margin-top: -8px;
+}
+
+.banner-bottom {
+  position: fixed;
+  bottom: 0px;
+  left: 0px;
+}
+
+.map {
+  top: 24px;
+  z-index: 100;
+  position: fixed;
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+.front {
+  z-index: 100;
+  position: fixed;
+  height: 100%;
+}
+
+.message {
+  font-family: Chandrila, "Microsoft Sans Serif";
+  font-size: 56.106098pt;
+}
+
+.message-besh {
+  font-family: "AurekBeshNarrow";
+  font-size: 22.559937pt;
+}
+
+.title {
+  font-family: Handel;
+  font-size: 26.862385pt;
+}
+
+.title-besh {
+  font-family: "AurekBeshNarrow";
+  font-size: 23.642530pt;
+}
+
+.location-string {
+  font-family: Handel;
+  font-size: 28.589397pt;
+}
+
+.location-string-besh {
+  font-family: "AurekBeshNarrow";
+  font-size: 16.756989pt;
+}
+
+.cabin-string {
+  font-family: "SpaceStencil";
+  font-size: 68pt;
+}
+
+.banner-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.logo {
+  position: fixed;
+  height: 98px;
+  width: 98px;
+  z-index: 100;
+  top: 149px;
+  left: 71px;
+  transform: scale(2.2);
+}
+
+.logo-imperial {
+  position: fixed;
+  height: 98px;
+  width: 98px;
+  z-index: 100;
+  top: 53px;
+  left: 15px;
+  transform: scale(1.19);
+}
+
+.logo-legacy {
+  position: fixed;
+  height: 98px;
+  width: 98px;
+  z-index: 100;
+  top: 42px;
+  left: 12px;
+}
+
+.logo-1080 {
+  position: absolute;
+  height: 98px;
+  width: 98px;
+  z-index: 100;
+  top: 128px;
+  left: 68px;
+  transform: scale(1.875);
+}
+
+.map-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

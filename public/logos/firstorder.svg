@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" baseProfile="full" width="639" height="735" viewBox="0 0 639.00 735.00" enable-background="new 0 0 639.00 735.00" xml:space="preserve">
+	<g>
+		<path fill="#000000" fill-opacity="1" stroke-width="63" stroke-linejoin="miter" stroke="#000000" stroke-opacity="1" d="M 319.5,31.4999L 31.5,191.5L 31.5,543.5L 319.5,703.5L 607.5,543.5L 607.5,191.5L 319.5,31.4999 Z "/>
+		<path fill="none" stroke-width="23" stroke-linejoin="miter" stroke="#B20007" stroke-opacity="1" d="M 319.5,31.4996L 31.4999,191.5L 31.4999,543.5L 319.5,703.5L 607.5,543.5L 607.5,191.5L 319.5,31.4996 Z "/>
+		<ellipse fill="#B20007" fill-opacity="1" stroke-width="0.2" stroke-linejoin="round" cx="319.5" cy="365.5" rx="265" ry="265"/>
+		<rect x="287.5" y="113.501" fill="#000000" fill-opacity="1" stroke-width="0.2" stroke-linejoin="round" width="64" height="504.002"/>
+		<path fill="#000000" fill-opacity="1" stroke-width="0.2" stroke-linejoin="round" d="M 386.372,120.436L 445.5,144.928L 252.628,610.563L 193.5,586.071L 386.372,120.436 Z "/>
+		<path fill="#000000" fill-opacity="1" stroke-width="0.2" stroke-linejoin="round" d="M 475.063,164.681L 520.318,209.936L 163.936,566.318L 118.682,521.063L 475.063,164.681 Z "/>
+		<path fill="#000000" fill-opacity="1" stroke-width="0.2" stroke-linejoin="round" d="M 540.071,239.499L 564.563,298.628L 98.9281,491.5L 74.4364,432.372L 540.071,239.499 Z "/>
+		<rect x="67.4968" y="333.5" fill="#000000" fill-opacity="1" stroke-width="0.2" stroke-linejoin="round" width="504.002" height="64"/>
+		<path fill="#000000" fill-opacity="1" stroke-width="0.2" stroke-linejoin="round" d="M 564.563,432.372L 540.072,491.5L 74.4364,298.628L 98.9281,239.5L 564.563,432.372 Z "/>
+		<path fill="#000000" fill-opacity="1" stroke-width="0.2" stroke-linejoin="round" d="M 520.318,521.063L 475.064,566.318L 118.682,209.936L 163.937,164.681L 520.318,521.063 Z "/>
+		<path fill="#000000" fill-opacity="1" stroke-width="0.2" stroke-linejoin="round" d="M 445.5,586.071L 386.372,610.563L 193.5,144.928L 252.628,120.436L 445.5,586.071 Z "/>
+	</g>
+</svg>
