@@ -40,6 +40,7 @@ export const SpaceSpiral: React.FC<SpaceSpiralProps> = ({
   const spiralRef = useRef<THREE.Line | null>(null);
   const starCanvasRef = useRef<HTMLCanvasElement>(null);
   const frame = useCurrentFrame();
+  const resizeObserverRef = useRef<ResizeObserver | null>(null);
 
   // Generate deterministic star positions using Remotion's random
   const stars = useMemo(() => {
@@ -51,42 +52,82 @@ export const SpaceSpiral: React.FC<SpaceSpiralProps> = ({
     }));
   }, [starCount, minStarSize, maxStarSize, seed]);
 
+  // Handle window resize
+  const handleResize = () => {
+    if (!containerRef.current || !rendererRef.current || !cameraRef.current) return;
+
+    const width = containerRef.current.clientWidth;
+    const height = containerRef.current.clientHeight;
+
+    cameraRef.current.aspect = width / height;
+    cameraRef.current.updateProjectionMatrix();
+
+    rendererRef.current.setSize(width, height);
+
+    // Update star canvas size
+    if (starCanvasRef.current) {
+      starCanvasRef.current.width = width;
+      starCanvasRef.current.height = height;
+
+      // Redraw stars
+      const ctx = starCanvasRef.current.getContext('2d');
+      if (ctx) {
+        ctx.clearRect(0, 0, width, height);
+        stars.forEach((star) => {
+          const x = star.x * (width / 100);
+          const y = star.y * (height / 100);
+          ctx.beginPath();
+          ctx.arc(x, y, star.size, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(255, 255, 255, ${star.opacity})`;
+          ctx.fill();
+        });
+      }
+    }
+  };
+
   // Setup and handle stars canvas
   useEffect(() => {
     const starCanvas = starCanvasRef.current;
     if (!starCanvas || !containerRef.current) return;
 
-    starCanvas.width = containerRef.current.clientWidth;
-    starCanvas.height = containerRef.current.clientHeight;
-    const ctx = starCanvas.getContext('2d');
-    if (!ctx) return;
-
-    // Clear canvas
-    ctx.fillStyle = 'transparent';
-    ctx.clearRect(0, 0, starCanvas.width, starCanvas.height);
-
-    // Draw stars
-    stars.forEach((star) => {
-      const x = star.x * (starCanvas.width / 100);
-      const y = star.y * (starCanvas.height / 100);
-      ctx.beginPath();
-      ctx.arc(x, y, star.size, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(255, 255, 255, ${star.opacity})`;
-      ctx.fill();
-    });
+    handleResize();
   }, [stars]);
 
   // Setup and handle Three.js scene
   useEffect(() => {
     if (!containerRef.current) return;
 
+    // Clean up any existing scene
+    if (rendererRef.current && containerRef.current.contains(rendererRef.current.domElement)) {
+      containerRef.current.removeChild(rendererRef.current.domElement);
+    }
+
     // Scene setup
     const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(75, containerRef.current.clientWidth / containerRef.current.clientHeight, 0.1, 1000);
+    const camera = new THREE.PerspectiveCamera(
+      75,
+      containerRef.current.clientWidth / containerRef.current.clientHeight,
+      0.1,
+      1000
+    );
+
     const renderer = new THREE.WebGLRenderer({ alpha: true });
     renderer.setClearColor(0x000000, 0);
     renderer.setSize(containerRef.current.clientWidth, containerRef.current.clientHeight);
-    containerRef.current.appendChild(renderer.domElement);
+
+    // Insert renderer before star canvas to ensure proper layering
+    if (starCanvasRef.current) {
+      containerRef.current.insertBefore(renderer.domElement, starCanvasRef.current);
+    } else {
+      containerRef.current.appendChild(renderer.domElement);
+    }
+
+    // Style the renderer canvas for proper positioning
+    renderer.domElement.style.position = 'absolute';
+    renderer.domElement.style.top = '0';
+    renderer.domElement.style.left = '0';
+    renderer.domElement.style.width = '100%';
+    renderer.domElement.style.height = '100%';
 
     // Apply screen rotation
     scene.rotation.z = THREE.MathUtils.degToRad(screenRotation);
@@ -120,10 +161,15 @@ export const SpaceSpiral: React.FC<SpaceSpiralProps> = ({
     cameraRef.current = camera;
     spiralRef.current = spiral;
 
+    // Setup resize observer
+    resizeObserverRef.current = new ResizeObserver(handleResize);
+    resizeObserverRef.current.observe(containerRef.current);
+
     // Cleanup
     return () => {
+      resizeObserverRef.current?.disconnect();
       renderer.dispose();
-      if (containerRef.current) {
+      if (containerRef.current && containerRef.current.contains(renderer.domElement)) {
         containerRef.current.removeChild(renderer.domElement);
       }
     };
@@ -131,20 +177,16 @@ export const SpaceSpiral: React.FC<SpaceSpiralProps> = ({
 
   // Handle animation
   useEffect(() => {
-    if (!sceneRef.current || !rendererRef.current || !spiralRef.current) return;
+    if (!sceneRef.current || !rendererRef.current || !cameraRef.current || !spiralRef.current) return;
 
     // Update spiral rotation
-    if (spiralRef.current) {
-      spiralRef.current.rotation.y = frame * 0.01;
-    }
+    spiralRef.current.rotation.y = frame * 0.01;
 
     // Update screen rotation
-    if (sceneRef.current) {
-      sceneRef.current.rotation.z = THREE.MathUtils.degToRad(screenRotation + (frame * screenRotationSpeed));
-    }
+    sceneRef.current.rotation.z = THREE.MathUtils.degToRad(screenRotation + (frame * screenRotationSpeed));
 
     // Render
-    rendererRef.current.render(sceneRef.current, cameraRef.current!);
+    rendererRef.current.render(sceneRef.current, cameraRef.current);
   }, [frame, screenRotationSpeed]);
 
   return (

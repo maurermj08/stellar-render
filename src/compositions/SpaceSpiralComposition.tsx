@@ -35,7 +35,7 @@ export const SpaceSpiralComposition: React.FC<z.infer<typeof SpaceSpiralSchema>>
   seed = 0,
 }) => {
   return (
-    <AbsoluteFill>
+    <AbsoluteFill style={{ width: '100%', height: '100%' }}>
       <SpaceSpiral
         turns={turns}
         height={height}
