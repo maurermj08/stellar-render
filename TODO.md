@@ -22,6 +22,8 @@ Based on 2 legacy projects under the legacy/render-videos and legacy/stellar-vid
 
 The goal is to join these two old projects into a single mono-repo. I am not longer using lovable so those items can be ignored. Please try to use the stellar-video project styling, pages, and theming whenever possible as they look great. However, changes will be needed to make sure the components work.
 
+For Supabase we will no longer need the thumbnails, preview.mp4 videos, and templates. These all have been replaced by dynamic items using remotion. 
+
 ## Project Structure
 - Legacy projects location: `/legacy/render-videos` and `/legacy/stellar-video-grid`
 - Target Node.js version: 23+
@@ -74,41 +76,26 @@ Please update this file to track any and all changes.
 - [x] Create videos folder structure (moved to src/videos)
 - [x] Import existing Remotion components
 - [x] Test rendering one component in the app (THIS IS KEY) THIS NEEDS TO USE THE REMOTION PLAYER NOT JUST THE MP4 FILE
-- [ ] Make pages/Customize.tsx generate the form dynamically using the composition and videos schema
-- [ ] Make Video components load in dynamically
+- [x] Make pages/Customize.tsx generate the form dynamically using the composition and videos schema
+- [x] Make Video components load in dynamically
 SEE: https://www.remotion.dev/docs/player/thumbnail
 SEE: https://www.remotion.dev/docs/player/player
 
-## Phase 3: Component Browser
-- [ ] Create grid/list view of available components
-- [ ] Build component preview cards with thumbnails
-- [ ] Implement component selection logic
-- [ ] Add filtering/search functionality
-- [ ] Create component detail view
+## Phase 3: Match legacy stellar-video-grid
+- [x] Rebuild navigation bar to match /legacy/stellar-video-grid
+- [x] Match the original /legacy/stellar-video-grid theming and logos
+- [x] Build out place holders for user profile, email, display image (Profile.tsx)
+- [x] Build out place holder for page rendering videos (Queue.tsx)
 
-## Phase 4: Parameter Editor
-- [ ] Create parameter form components
-- [ ] Map Radix UI components to parameter types
-- [ ] Build dynamic form generation
-- [ ] Implement state management for parameters
-- [ ] Create real-time parameter updating
-
-## Phase 5: Preview Player
-- [ ] Build customized Remotion player
-- [ ] Create playback controls
-- [ ] Implement preview quality settings
-- [ ] Add frame navigation
-- [ ] Create responsive container for player
-
-## Phase 6: Supabase Integration
+## Phase 4: Supabase Integration (Ignore thumbnails, templates, and preview.mp4 files)
 - [ ] Configure Supabase client
 - [ ] Set up authentication
 - [ ] Create database schema
 - [ ] Implement save/load functionality
 - [ ] Add user profiles and preferences
 
-## Phase 7: Refinement
-- [ ] Test rendering performance
+## Phase 5: Refinement
+- [ ] Test rendering action
 - [ ] Fix any theme compatibility issues
 - [ ] Add error handling
 - [ ] Implement responsive design adjustments

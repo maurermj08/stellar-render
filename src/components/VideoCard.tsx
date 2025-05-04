@@ -40,9 +40,10 @@ export const VideoCard = ({
           inputProps={defaultProps}
           durationInFrames={300}
           fps={30}
-          autoPlay={true}
           compositionWidth={1920}
           compositionHeight={1080}
+          autoPlay={true}
+          loop
           style={{
             width: '100%',
             height: '100%',
@@ -101,7 +102,7 @@ export const VideoCard = ({
       </div>
       <Link 
         to={`/customize/${id}`} 
-        className={`p-4 flex items-center justify-between ${isPlaying ? 'bg-primary' : ''}`}
+        className="p-4 flex items-center justify-between"
       >
         <div className="flex items-center gap-2">
           {isPlaying && <Settings className="w-5 h-5" />}

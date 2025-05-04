@@ -1,7 +1,6 @@
 import type { Config } from "tailwindcss";
 
 export default {
-  // darkMode: ["class"],
   content: [
     "./pages/**/*.{ts,tsx}",
     "./components/**/*.{ts,tsx}",
@@ -10,7 +9,6 @@ export default {
     "./public/**/*.{html,js}",
     "./legacy/**/*.{ts,tsx,js,jsx,html}",
   ],
-  prefix: "",
   theme: {
     container: {
       center: true,
@@ -21,19 +19,28 @@ export default {
     },
     extend: {
       colors: {
-        border: "hsl(var(--border))",
-        input: "hsl(var(--input))",
-        ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         primary: {
           DEFAULT: "#7E69AB",
           hover: "#6E59A5",
+          foreground: "hsl(var(--primary-foreground))",
+        },
+        muted: {
+          DEFAULT: "hsl(var(--muted))",
+          foreground: "hsl(var(--muted-foreground))",
         },
         card: {
-          DEFAULT: "#1A1F2C",
-          hover: "#222736",
+          DEFAULT: "hsl(var(--card))",
+          foreground: "hsl(var(--card-foreground))",
         },
+        accent: {
+          DEFAULT: "hsl(var(--accent))",
+          foreground: "hsl(var(--accent-foreground))",
+        },
+        border: "hsl(var(--border))",
+        input: "hsl(var(--input))",
+        ring: "hsl(var(--ring))",
       },
       animation: {
         "card-hover": "card-hover 0.3s ease-in-out forwards",

@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { useParams } from 'react-router-dom';
-import { Player, Thumbnail } from '@remotion/player';
+import { useParams, Link } from 'react-router-dom';
+import { Player } from '@remotion/player';
 import { compositions } from '../compositions.config';
 import { z } from 'zod';
 
@@ -82,7 +82,11 @@ export function Customize() {
 
   const { component: Comp, width, height, fps, durationInFrames, schema, defaultProps } = composition;
   const videoName = id; // Removed 'name' property usage
-  const thumbnailFrame = Math.min(10, Math.floor(durationInFrames / 2));
+
+  // Helper function to add spaces to camel case text
+  const addSpacesToCamelCase = (text: string) => {
+    return text.replace(/([A-Z])/g, ' $1').trim();
+  };
 
   // Initialize parameters with defaultProps if not already set
   useState(() => {
@@ -121,7 +125,7 @@ export function Customize() {
               min={min}
               max={max}
               step={step}
-              className="w-full px-3 py-2 bg-card-hover rounded-md border border-border"
+              className="w-full px-3 py-2 bg-muted text-foreground rounded-md border border-border focus:border-primary focus:ring-1 focus:ring-primary"
             />
           </div>
         );
@@ -131,16 +135,12 @@ export function Customize() {
           <div key={key} className="space-y-2">
             <label className="block text-sm font-medium mb-1 capitalize flex items-center gap-2">
               {key.replace(/([A-Z])/g, ' $1').trim()}
-              <div 
-                className="w-6 h-6 rounded-md border border-border"
-                style={{ backgroundColor: currentValue }}
-              />
             </label>
             <input
               type="color"
               value={currentValue}
               onChange={(e) => updateParameter(key, e.target.value)}
-              className="h-10 w-20 p-1 rounded-md"
+              className="h-10 w-20 p-1 rounded-md bg-muted"
             />
           </div>
         );
@@ -154,7 +154,7 @@ export function Customize() {
             <select
               value={currentValue}
               onChange={(e) => updateParameter(key, e.target.value)}
-              className="w-full px-3 py-2 bg-card-hover rounded-md border border-border"
+              className="w-full px-3 py-2 bg-muted text-foreground rounded-md border border-border focus:border-primary focus:ring-1 focus:ring-primary"
             >
               {options.map((opt: string) => (
                 <option key={opt} value={opt}>
@@ -173,7 +173,7 @@ export function Customize() {
                 type="checkbox"
                 checked={currentValue}
                 onChange={(e) => updateParameter(key, e.target.checked)}
-                className="rounded border-border"
+                className="rounded border-border text-primary focus:ring-primary"
               />
               <span className="text-sm font-medium capitalize">
                 {key.replace(/([A-Z])/g, ' $1').trim()}
@@ -191,7 +191,7 @@ export function Customize() {
               type="text"
               value={currentValue}
               onChange={(e) => updateParameter(key, e.target.value)}
-              className="w-full px-3 py-2 bg-card-hover rounded-md border border-border"
+              className="w-full px-3 py-2 bg-muted text-foreground rounded-md border border-border focus:border-primary focus:ring-1 focus:ring-primary"
             />
           </div>
         );
@@ -200,61 +200,60 @@ export function Customize() {
 
   return (
     <div className="container mx-auto py-8 px-4">
-      <div className="max-w-4xl mx-auto space-y-8">
-        {/* Preview Section */}
-        <div>
-          <h1 className="text-2xl font-bold mb-3">Preview {videoName}</h1>
-          <div className="bg-card p-6 rounded-lg space-y-6">
-            <div className="relative w-full" style={{ aspectRatio: `${width}/${height}` }}>
-              <Player
-                component={Comp as React.ComponentType<Record<string, any>>}
-                compositionWidth={width}
-                compositionHeight={height}
-                controls
-                fps={fps}
-                durationInFrames={durationInFrames}
-                style={{
-                  width: '100%',
-                  height: '100%',
-                }}
-                inputProps={parameters}
-                autoPlay
-                loop
-              />
+      <div className="max-w-7xl mx-auto space-y-8">
+        {/* Breadcrumbs - only shown on md and larger screens */}
+        <div className="hidden md:flex items-center gap-2 text-sm text-muted-foreground">
+          <Link to="/" className="hover:text-primary transition-colors">Home</Link>
+          <span>/</span>
+          <span className="text-foreground">{addSpacesToCamelCase(videoName)}</span>
+        </div>
+
+        {/* Main content grid */}
+        <div className="grid lg:grid-cols-2 gap-8">
+          {/* Preview Section */}
+          <div className="space-y-6">
+            <h1 className="text-2xl font-bold">Customize {addSpacesToCamelCase(videoName)}</h1>
+            <div className="bg-card rounded-lg overflow-hidden">
+              <div className="relative w-full" style={{ aspectRatio: `${width}/${height}` }}>
+                <Player
+                  component={Comp as React.ComponentType<Record<string, any>>}
+                  compositionWidth={width}
+                  compositionHeight={height}
+                  controls
+                  fps={fps}
+                  durationInFrames={durationInFrames}
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                  }}
+                  inputProps={parameters}
+                  autoPlay
+                  loop
+                />
+              </div>
             </div>
+          </div>
             
-            {/* Parameters Form */}
-            <div className="space-y-4">
-              <h2 className="text-xl font-semibold">Parameters</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {/* Parameters Form */}
+          <div className="space-y-6">
+            <h2 className="text-2xl font-bold">Settings</h2>
+            <div className="bg-card p-6 rounded-lg">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 {Object.entries(shape).map(([key, fieldSchema]) => 
                   renderField(key, fieldSchema as z.ZodTypeAny)
                 )}
               </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Thumbnail Section */}
-        <div>
-          <h2 className="text-xl font-semibold mb-3">Thumbnail {videoName}</h2>
-          <div className="bg-card p-2 rounded-lg">
-            <div className="relative w-full max-w-[600px]" style={{ aspectRatio: `${width}/${height}` }}>
-              <Thumbnail
-                component={Comp as React.ComponentType<Record<string, any>>}
-                compositionWidth={width}
-                compositionHeight={height}
-                fps={fps}
-                frameToDisplay={thumbnailFrame}
-                durationInFrames={durationInFrames}
-                inputProps={parameters}
-                style={{
-                  width: '100%',
-                  height: '100%',
-                  display: 'block',
-                  borderRadius: '4px',
-                }}
-              />
+              <div className="mt-8">
+                <button
+                  className="w-full bg-primary text-primary-foreground hover:bg-primary/90 px-4 py-3 rounded-lg font-medium flex items-center justify-center gap-2"
+                  onClick={() => {
+                    // Placeholder for generate functionality
+                    console.log('Generate clicked', parameters);
+                  }}
+                >
+                  Generate
+                </button>
+              </div>
             </div>
           </div>
         </div>

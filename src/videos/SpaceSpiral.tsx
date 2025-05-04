@@ -15,6 +15,7 @@ interface SpaceSpiralProps {
   spiralRotation?: number;
   screenRotation?: number;
   screenRotationSpeed?: number;
+  toggleRainbowEffect?: boolean;
   seed?: number;
 }
 
@@ -31,6 +32,7 @@ export const SpaceSpiral: React.FC<SpaceSpiralProps> = ({
   spiralRotation = 270,
   screenRotation = 60,
   screenRotationSpeed = 12,
+  toggleRainbowEffect = false,
   seed = 0,
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -147,7 +149,15 @@ export const SpaceSpiral: React.FC<SpaceSpiralProps> = ({
 
     spiralGeometry.setFromPoints(points);
 
-    const material = new THREE.LineBasicMaterial({ color: spiralColor });
+    const getColor = () => {
+      if (toggleRainbowEffect) {
+        const hue = frame % 360;
+        return new THREE.Color(`hsl(${hue}, 100%, 50%)`);
+      }
+      return new THREE.Color(spiralColor);
+    };
+
+    const material = new THREE.LineBasicMaterial({ color: getColor() });
     const spiral = new THREE.Line(spiralGeometry, material);
     scene.add(spiral);
 
@@ -173,7 +183,7 @@ export const SpaceSpiral: React.FC<SpaceSpiralProps> = ({
         containerRef.current.removeChild(renderer.domElement);
       }
     };
-  }, [turns, height, radius, segments, spiralColor, zoomLevel, spiralRotation, screenRotation]);
+  }, [turns, height, radius, segments, spiralColor, zoomLevel, spiralRotation, screenRotation, frame, toggleRainbowEffect]);
 
   // Handle animation
   useEffect(() => {
@@ -182,12 +192,18 @@ export const SpaceSpiral: React.FC<SpaceSpiralProps> = ({
     // Update spiral rotation
     spiralRef.current.rotation.y = frame * 0.01;
 
+    // Update spiral color if rainbow effect is enabled
+    if (toggleRainbowEffect && spiralRef.current.material instanceof THREE.LineBasicMaterial) {
+      const hue = frame % 360;
+      spiralRef.current.material.color = new THREE.Color(`hsl(${hue}, 100%, 50%)`);
+    }
+
     // Update screen rotation
     sceneRef.current.rotation.z = THREE.MathUtils.degToRad(screenRotation + (frame * screenRotationSpeed));
 
     // Render
     rendererRef.current.render(sceneRef.current, cameraRef.current);
-  }, [frame, screenRotationSpeed]);
+  }, [frame, screenRotationSpeed, toggleRainbowEffect]);
 
   return (
     <div ref={containerRef} className="w-full h-full bg-black relative">

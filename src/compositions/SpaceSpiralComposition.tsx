@@ -16,6 +16,7 @@ export const SpaceSpiralSchema = z.object({
   spiralRotation: z.number().default(270),
   screenRotation: z.number().default(60),
   screenRotationSpeed: z.number().default(12),
+  toggleRainbowEffect: z.boolean().default(false),
   seed: z.number().int().default(0),
 });
 
@@ -32,6 +33,7 @@ export const SpaceSpiralComposition: React.FC<z.infer<typeof SpaceSpiralSchema>>
   spiralRotation = 270,
   screenRotation = 60,
   screenRotationSpeed = 12,
+  toggleRainbowEffect = false,
   seed = 0,
 }) => {
   return (
@@ -49,6 +51,7 @@ export const SpaceSpiralComposition: React.FC<z.infer<typeof SpaceSpiralSchema>>
         spiralRotation={spiralRotation}
         screenRotation={screenRotation}
         screenRotationSpeed={screenRotationSpeed}
+        toggleRainbowEffect={toggleRainbowEffect}
         seed={seed}
       />
     </AbsoluteFill>
