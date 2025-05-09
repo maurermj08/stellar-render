@@ -25,3 +25,6 @@ legacy/render-videos
 *.njsproj
 *.sln
 *.sw?
+
+# Supabase
+.env

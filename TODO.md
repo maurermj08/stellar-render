@@ -24,6 +24,78 @@ The goal is to join these two old projects into a single mono-repo. I am not lon
 
 For Supabase we will no longer need the thumbnails, preview.mp4 videos, and templates. These all have been replaced by dynamic items using remotion. 
 
+## Database Tables
+Only use renders and profiles table for now. DO NOT USE TEMPLATES IT IS DEPRECIATED.
+
+### renders
+id	
+bigint
+number
+
+created_timestamp	
+timestamp with time zone
+string
+
+finished_timestamp	
+timestamp with time zone
+string
+
+started_timestamp	
+timestamp with time zone
+string	
+
+parameters	
+json
+
+template
+LEGACY DO NOT USE
+
+video
+string (the name of the video component)
+
+number	
+version	
+bigint
+
+number	
+uuid	
+string	
+
+user_id	
+uuid
+string
+
+### profiles
+id	
+uuid
+string	
+
+updated_at	
+timestamp with time zone
+string	
+
+username	
+text
+string	
+
+full_name	
+text
+string	
+
+avatar_url	
+text
+string	
+
+website	
+text
+string
+
+tokens	
+bigint
+number
+
+
+
 ## Project Structure
 - Legacy projects location: `/legacy/render-videos` and `/legacy/stellar-video-grid`
 - Target Node.js version: 23+
@@ -90,9 +162,9 @@ SEE: https://www.remotion.dev/docs/player/player
 ## Phase 4: Supabase Integration (Ignore thumbnails, templates, and preview.mp4 files)
 - [ ] Configure Supabase client
 - [ ] Set up authentication
-- [ ] Create database schema
-- [ ] Implement save/load functionality
-- [ ] Add user profiles and preferences
+- [ ] Use profiles table for user profiles
+- [ ] Use renders table to create new "render" requests
+- [ ] Use renders table to populate queue page
 
 ## Phase 5: Refinement
 - [ ] Test rendering action
