@@ -24,8 +24,8 @@ jobs:
 
       - name: Set up environment variables
         run: |
-          echo "SERVICE_ROLE_KEY=${{ secrets.SERVICE_ROLE_KEY }}" >> .env.local
-          echo "PUBLIC_SUPABASE_URL=${{ secrets.PUBLIC_SUPABASE_URL }}" >> .env.local
+          echo "SERVICE_ROLE_KEY=${{ secrets.SERVICE_ROLE_KEY }}" >> .env
+          echo "PUBLIC_SUPABASE_URL=${{ secrets.PUBLIC_SUPABASE_URL }}" >> .env
 
       - name: Run render script
         run: bash render_action.sh
