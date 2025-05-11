@@ -3,6 +3,17 @@
 # Get the environment variables
 source .env.local
 
+# Check required environment variables
+if [[ -z "$SERVICE_ROLE_KEY" ]]; then
+    echo "Error: SERVICE_ROLE_KEY is not set"
+    exit 1
+fi
+
+if [[ -z "$PUBLIC_SUPABASE_URL" ]]; then
+    echo "Error: PUBLIC_SUPABASE_URL is not set"
+    exit 1
+fi
+
 # Your table names
 RENDER_TABLE_NAME="renders"
 
@@ -10,10 +21,32 @@ RENDER_TABLE_NAME="renders"
 RENDER_QUERY_PARAMS="select=*&started_timestamp=is.null&limit=5"
 
 # Make the API request to get pending renders
-results=$(curl -s -X GET \
+echo "Querying Supabase for pending renders..."
+results=$(curl -s -f -X GET \
   -H "apikey: $SERVICE_ROLE_KEY" \
   -H "Authorization: Bearer $SERVICE_ROLE_KEY" \
   "${PUBLIC_SUPABASE_URL}/rest/v1/${RENDER_TABLE_NAME}?${RENDER_QUERY_PARAMS}")
+
+# Check if curl request failed
+if [[ $? -ne 0 ]]; then
+    echo "Error: Failed to connect to Supabase API"
+    exit 1
+fi
+
+# Check if results is empty or null
+if [[ "$results" == "[]" || -z "$results" ]]; then
+    echo "No pending renders found. Exiting successfully."
+    exit 0
+fi
+
+# Check if results is valid JSON
+if ! jq -e . >/dev/null 2>&1 <<< "$results"; then
+    echo "Error: Invalid JSON response from Supabase"
+    echo "Response: $results"
+    exit 1
+fi
+
+echo "Found $(echo "$results" | jq length) renders to process"
 
 # Initialize counters using temporary files
 successful_renders_file=$(mktemp)
