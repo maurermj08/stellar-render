@@ -29,7 +29,7 @@ export const compositions = {
       },
       DeathStar: {
         component: DeathStarComposition,
-        durationInFrames: 10471, // 30 * 1 * 60 * 6,
+        durationInFrames: 120 * 30, // 30 * 1 * 60 * 6, 10471
         fps: 30,
         width: 1920,
         height: 1080,

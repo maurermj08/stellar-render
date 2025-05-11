@@ -183,7 +183,10 @@ export function Queue() {
                         asChild
                       >
                         <a
-                          href={`/videos/${render.uuid}.mp4`}
+                          href={supabase.storage
+                            .from('videos')
+                            .getPublicUrl(`${render.uuid}.mp4`)
+                            .data.publicUrl}
                           download
                           target="_blank"
                           rel="noopener noreferrer"
