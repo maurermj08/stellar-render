@@ -3,6 +3,16 @@
 # Get the environment variables
 source .env.local
 
+# Install Remotion dependencies if needed
+echo "Checking and installing Remotion dependencies..."
+npm install @remotion/compositor-linux-x64-gnu @remotion/compositor-linux-x64-musl
+
+# Check if the installation was successful
+if [ $? -ne 0 ]; then
+    echo "Error: Failed to install Remotion dependencies"
+    exit 1
+fi
+
 # Check required environment variables
 if [[ -z "$SERVICE_ROLE_KEY" ]]; then
     echo "Error: SERVICE_ROLE_KEY is not set"
