@@ -1,8 +1,15 @@
 import { useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { Player } from '@remotion/player';
 import { compositions } from '../compositions.config';
 import { z } from 'zod';
+import supabase from '../utils/supabase';
+import { v5 as uuidv5 } from 'uuid';
+import { useToast } from '@/components/ui/use-toast';
+import { useQuery } from '@tanstack/react-query';
+
+// Namespace for UUID generation
+const NAMESPACE = "6189bbe8-92e9-4e34-b653-7258e0fc354b";
 
 // Helper function to get input type based on Zod schema
 const getInputTypeFromZodSchema = (schema: z.ZodTypeAny, key: string) => {
@@ -69,6 +76,89 @@ const getNumberConstraints = (schema: z.ZodNumber) => {
 export function Customize() {
   const { id } = useParams<{ id: string }>();
   const [parameters, setParameters] = useState<Record<string, any>>({});
+  const navigate = useNavigate();
+  const { toast } = useToast();
+
+  // Get current user session
+  const { data: session } = useQuery({
+    queryKey: ['session'],
+    queryFn: async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      return session;
+    },
+  });
+
+  // Get user profile for tokens
+  const { data: profile } = useQuery({
+    queryKey: ['profile', session?.user?.id],
+    queryFn: async () => {
+      if (!session?.user?.id) return null;
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('tokens')
+        .eq('id', session.user.id)
+        .single();
+      
+      if (error) throw error;
+      return data;
+    },
+    enabled: !!session?.user?.id,
+  });
+
+  const handleGenerate = async () => {
+    if (!session?.user) {
+      toast({
+        title: "Error",
+        description: "You must be logged in to generate a video",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    try {
+      // Generate UUID for the render
+      const dataToHash = JSON.stringify({
+        video: id,
+        parameters,
+      });
+      const uuid = uuidv5(dataToHash, NAMESPACE);
+
+      // Deduct tokens (cost is temporarily set to 1)
+      const { error: tokenError } = await supabase.rpc('subtract_tokens', {
+        user_id: session.user.id,
+        amount: 1
+      });
+
+      if (tokenError) throw new Error('Failed to process tokens');
+
+      // Create render entry
+      const { data, error } = await supabase
+        .from('renders')
+        .insert({
+          user_id: session.user.id,
+          video: id,
+          parameters,
+          uuid,
+          version: 1, // Set initial version
+        })
+        .select()
+        .single();
+
+      if (error) throw error;
+
+      toast({
+        title: "Success",
+        description: "Successfully submitted video for rendering! This process may take up to an hour, please check back soon.",
+      });
+      navigate('/queue');
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: error instanceof Error ? error.message : "An error occurred",
+        variant: "destructive",
+      });
+    }
+  };
 
   if (!id) {
     return <div>Error: Video ID not found in URL.</div>;
@@ -245,13 +335,17 @@ export function Customize() {
               </div>
               <div className="mt-8">
                 <button
-                  className="w-full bg-primary text-primary-foreground hover:bg-primary/90 px-4 py-3 rounded-lg font-medium flex items-center justify-center gap-2"
-                  onClick={() => {
-                    // Placeholder for generate functionality
-                    console.log('Generate clicked', parameters);
-                  }}
+                  className="w-full bg-primary text-primary-foreground hover:bg-primary/90 px-4 py-3 rounded-lg font-medium flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                  onClick={handleGenerate}
+                  disabled={!session || (profile?.tokens || 0) < 1}
                 >
-                  Generate
+                  {!session ? (
+                    "Please login to generate"
+                  ) : (profile?.tokens || 0) < 1 ? (
+                    "Not enough tokens"
+                  ) : (
+                    "Generate Video"
+                  )}
                 </button>
               </div>
             </div>

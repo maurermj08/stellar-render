@@ -99,7 +99,7 @@ number
 ## Project Structure
 - Legacy projects location: `/legacy/render-videos` and `/legacy/stellar-video-grid`
 - Target Node.js version: 23+
-- Package manager: yarn
+- Package manager: npm
 
 ### Core Dependencies
 ```json
@@ -160,9 +160,9 @@ SEE: https://www.remotion.dev/docs/player/player
 - [x] Build out place holder for page rendering videos (Queue.tsx)
 
 ## Phase 4: Supabase Integration (Ignore thumbnails, templates, and preview.mp4 files)
-- [ ] Configure Supabase client
-- [ ] Set up authentication
-- [ ] Use profiles table for user profiles
+- [x] Configure Supabase client
+- [x] Set up authentication
+- [x] Use profiles table for user profiles
 - [ ] Use renders table to create new "render" requests
 - [ ] Use renders table to populate queue page
 
@@ -172,6 +172,13 @@ SEE: https://www.remotion.dev/docs/player/player
 - [ ] Add error handling
 - [ ] Implement responsive design adjustments
 - [ ] Add loading states and indicators
+- [ ] Each video should have a render cost 
+- [ ] Remove preview videos
+- [ ] There should be no way to add money without paying
+
+## Phase 6: Beyond
+- [ ] Add Google Auth
+- [ ] Add facebook Auth
 
 ### Key Information for Future Prompts (DO NOT REMOVE THIS LINE JUST ADD ITEMS BELOW)
 - Path aliases have been configured in `tsconfig.json` and `vite.config.ts`.
