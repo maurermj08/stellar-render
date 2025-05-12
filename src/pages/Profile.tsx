@@ -180,7 +180,7 @@ const Profile = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <main className="container mx-auto px-4 pt-24 pb-12">
+      <main className="container mx-auto px-4 pt-8 pb-12">
         <div className="max-w-4xl mx-auto">
           <div className="flex flex-col items-center gap-6 mb-8">
             <div className="relative">
@@ -226,7 +226,7 @@ const Profile = () => {
               <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-card/80 border border-primary/20">
                 <TokenIcon className="w-5 h-5 text-primary" />
                 <span className="text-lg font-semibold">
-                  {tokens} tokens available
+                  {tokens} {tokens == 1 ? 'token' : 'tokens'} available
                 </span>
               </div>
             </div>
@@ -255,7 +255,7 @@ const Profile = () => {
                     <div className="text-3xl font-bold">${pkg.price}</div>
                     <div className="flex items-center justify-center gap-2 text-lg">
                       <TokenIcon className="w-5 h-5 text-primary" />
-                      {pkg.tokens} tokens
+                      {pkg.tokens} {pkg.tokens == 1 ? 'token' : 'tokens'}
                     </div>
                     <div className="text-sm text-muted-foreground">{pkg.value}</div>
                   </div>

@@ -30,7 +30,19 @@ jobs:
       - name: Run render script
         run: bash render_action.sh
 
+      - name: Check for rendered videos
+        id: check-videos
+        run: |
+          if [ -d "out" ] && [ "$(ls -A out)" ]; then
+            echo "has_videos=true" >> $GITHUB_OUTPUT
+          else
+            echo "No videos were rendered in this run"
+            echo "has_videos=false" >> $GITHUB_OUTPUT
+          fi
+
       - name: Upload rendered videos
+        if: steps.check-videos.outputs.has_videos == 'true'
         uses: actions/upload-artifact@v4
         with:
           name: rendered-videos
+          path: out/*.mp4

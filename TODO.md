@@ -163,22 +163,35 @@ SEE: https://www.remotion.dev/docs/player/player
 - [x] Configure Supabase client
 - [x] Set up authentication
 - [x] Use profiles table for user profiles
-- [ ] Use renders table to create new "render" requests
-- [ ] Use renders table to populate queue page
+- [x] Use renders table to create new "render" requests
+- [x] Use renders table to populate queue page
 
 ## Phase 5: Refinement
-- [ ] Test rendering action
+- [x] Test rendering action
 - [ ] Fix any theme compatibility issues
+- [ ] Add more token logic
 - [ ] Add error handling
 - [ ] Implement responsive design adjustments
 - [ ] Add loading states and indicators
 - [ ] Each video should have a render cost 
 - [ ] Remove preview videos
 - [ ] There should be no way to add money without paying
+- [ ] Remove legacy folders
+- [ ] Improve read me
+- [ ] Clean old tables
+- [ ] Manually deploy to website
+- [ ] Setup automatic deployments
+- [ ] Setup dev and main branch
+- [ ] Setup dev site with URL
+- [ ] Add branch protection
+- [ ] Add alternative storage
 
 ## Phase 6: Beyond
 - [ ] Add Google Auth
 - [ ] Add facebook Auth
+- [ ] Stripe integration
+- [ ] Free codes (Enter "youtube" and get 2 tokens)
+- [ ] Refund (Request refund, just hard limit until request support)
 
 ### Key Information for Future Prompts (DO NOT REMOVE THIS LINE JUST ADD ITEMS BELOW)
 - Path aliases have been configured in `tsconfig.json` and `vite.config.ts`.

@@ -91,7 +91,7 @@ export function Queue() {
     return (
       <div className="min-h-screen">
         <Navbar />
-        <main className="container mx-auto px-4 pt-24">
+        <main className="container mx-auto px-4 pt-8">
           <h1 className="text-2xl font-bold mb-6">Render Queue</h1>
           <div className="space-y-4">
             {[...Array(3)].map((_, i) => (
@@ -112,7 +112,7 @@ export function Queue() {
   return (
     <div className="min-h-screen">
       <Navbar />
-      <main className="container mx-auto px-4 pt-24">
+      <main className="container mx-auto px-4 pt-8">
         <h1 className="text-2xl font-bold mb-6">Render Queue</h1>
         <div className="rounded-md border">
           <Table>
