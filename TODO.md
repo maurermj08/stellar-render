@@ -16,14 +16,6 @@ React Remotion: For rendering and customizing video components
 Supabase: For authentication, storage, and database functionality
 shadcn/UI (Radix UI): For the UI components and theming, leveraging your existing design system
 
-Based on 2 legacy projects under the legacy/render-videos and legacy/stellar-video-grid
-* render-videos: contains the existing remotion video components
-* stellar-video-grid: an old project that implements 90% of the features and pages needed for this project with high quality formatting
-
-The goal is to join these two old projects into a single mono-repo. I am not longer using lovable so those items can be ignored. Please try to use the stellar-video project styling, pages, and theming whenever possible as they look great. However, changes will be needed to make sure the components work.
-
-For Supabase we will no longer need the thumbnails, preview.mp4 videos, and templates. These all have been replaced by dynamic items using remotion. 
-
 ## Database Tables
 Only use renders and profiles table for now. DO NOT USE TEMPLATES IT IS DEPRECIATED.
 
