@@ -65,6 +65,7 @@
   },
   "optionalDependencies": {
     "@remotion/compositor-linux-x64-gnu": "^4.0.300",
-    "@remotion/compositor-linux-x64-musl": "^4.0.300"
+    "@remotion/compositor-linux-x64-musl": "^4.0.300",
+    "@rollup/rollup-linux-x64-gnu": "latest"
   }
 }
