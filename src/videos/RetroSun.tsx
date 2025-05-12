@@ -18,14 +18,9 @@ interface RetroSunProps {
   numberOfMountainPoints: number;
 }
 
-const NUM_STARS = 120; // Increased number of stars
-const MIN_STAR_SIZE = 1;
-const MAX_STAR_SIZE = 10;
 const SEED = 42;
 const VIDEO_WIDTH = 1920;
 const VIDEO_HEIGHT = 600;
-const SUN_DIAMETER = 700;
-const STAR_MOVEMENT_SPEED = 0.5; 
 
 // Custom seeded random function
 const seededRandom = (seed: number) => {
@@ -36,8 +31,6 @@ const seededRandom = (seed: number) => {
 const randomInRange = (seed: number, min: number, max: number) => {
   return min + seededRandom(seed) * (max - min);
 };
-
-const NUM_MOUNTAIN_POINTS = 30;
 
 const generateMountainPoints = (width: number, height: number, numberOfMountainPoints: number) => {
   const points = [];

@@ -43,7 +43,6 @@ export const AlertSphere: React.FC<AlertSphereProps> = ({
   const LABEL_GROWTH_RATE = 500;
   const LABEL_MAX_LINE_LENGTH_RATIO = 0.3;
   const LABEL_CREATION_INTERVAL_MIN = 1000;
-  const LABEL_CREATION_INTERVAL_MAX = 5000;
   const RED_LABEL_CHANCE = 0.1;
   const MAX_TERMINAL_MESSAGES = 16;
   const TERMINAL_LINE_HEIGHT = 24;
@@ -145,10 +144,10 @@ export const AlertSphere: React.FC<AlertSphereProps> = ({
     }
 
     function drawSphere() {
-      sphereCtx.clearRect(0, 0, dimensions.width, dimensions.height);
-      sphereCtx.strokeStyle = sphereColor;
-      sphereCtx.fillStyle = backgroundColor;
-      sphereCtx.lineWidth = 1;
+      sphereCtx!.clearRect(0, 0, dimensions.width, dimensions.height);
+      sphereCtx!.strokeStyle = sphereColor;
+      sphereCtx!.fillStyle = backgroundColor;
+      sphereCtx!.lineWidth = 1;
 
       for (let i = 0; i <= SEGMENTS; i++) {
         for (let j = 0; j <= RINGS; j++) {
@@ -183,29 +182,29 @@ export const AlertSphere: React.FC<AlertSphereProps> = ({
           const nz = (point1.z + point2.z + point3.z + point4.z) / 4;
 
           if (!hideBackface || nx * (centerX - dimensions.width/2) + ny * (centerY - dimensions.height/2) + nz * radius < 0) {
-            sphereCtx.beginPath();
-            sphereCtx.moveTo(point1.x + centerX, point1.y + centerY);
-            sphereCtx.lineTo(point2.x + centerX, point2.y + centerY);
-            sphereCtx.lineTo(point3.x + centerX, point3.y + centerY);
-            sphereCtx.lineTo(point4.x + centerX, point4.y + centerY);
-            sphereCtx.closePath();
-            sphereCtx.stroke();
+            sphereCtx!.beginPath();
+            sphereCtx!.moveTo(point1.x + centerX, point1.y + centerY);
+            sphereCtx!.lineTo(point2.x + centerX, point2.y + centerY);
+            sphereCtx!.lineTo(point3.x + centerX, point3.y + centerY);
+            sphereCtx!.lineTo(point4.x + centerX, point4.y + centerY);
+            sphereCtx!.closePath();
+            sphereCtx!.stroke();
           }
         }
       }
     }
 
     function drawLabels() {
-      sphereCtx.lineWidth = 2;
+      sphereCtx!.lineWidth = 2;
 
       const visibleLabels = preGeneratedData.labels.filter(label => 
         frame >= label.createdAt && frame - label.createdAt <= LABEL_DURATION / (1000 / fps)
       );
 
       for (const label of visibleLabels) {
-        sphereCtx.strokeStyle = label.color;
-        sphereCtx.fillStyle = label.color;
-        sphereCtx.font = `bold ${fontSize}px ${fontFamily}`;
+        sphereCtx!.strokeStyle = label.color;
+        sphereCtx!.fillStyle = label.color;
+        sphereCtx!.font = `bold ${fontSize}px ${fontFamily}`;
 
         const x = radius * Math.sin(label.phi) * Math.cos(label.theta);
         const y = radius * Math.cos(label.phi);
@@ -221,19 +220,19 @@ export const AlertSphere: React.FC<AlertSphereProps> = ({
         const endX = projectedX + lineLength * (rotated.x / radius);
         const endY = projectedY + lineLength * (rotated.y / radius);
 
-        sphereCtx.beginPath();
-        sphereCtx.moveTo(projectedX, projectedY);
-        sphereCtx.lineTo(endX, endY);
-        sphereCtx.stroke();
+        sphereCtx!.beginPath();
+        sphereCtx!.moveTo(projectedX, projectedY);
+        sphereCtx!.lineTo(endX, endY);
+        sphereCtx!.stroke();
 
-        sphereCtx.fillText(label.number.toString(), endX + 5, endY + 5);
+        sphereCtx!.fillText(label.number.toString(), endX + 5, endY + 5);
       }
     }
 
     function drawTerminal() {
-      terminalCtx.fillStyle = backgroundColor;
-      terminalCtx.fillRect(0, 0, dimensions.width * 0.5, dimensions.height);
-      terminalCtx.font = `${fontSize}px ${fontFamily}`;
+      terminalCtx!.fillStyle = backgroundColor;
+      terminalCtx!.fillRect(0, 0, dimensions.width * 0.5, dimensions.height);
+      terminalCtx!.font = `${fontSize}px ${fontFamily}`;
 
       const visibleMessages = preGeneratedData.messages.filter(message => 
         frame >= message.createdAt && frame - message.createdAt <= TERMINAL_MESSAGE_DURATION / (1000 / fps)
@@ -246,15 +245,15 @@ export const AlertSphere: React.FC<AlertSphereProps> = ({
         const age = frame - message.createdAt;
         const alpha = Math.max(0, 1 - age / (TERMINAL_MESSAGE_DURATION / (1000 / fps)));
 
-        terminalCtx.fillStyle = message.color;
-        terminalCtx.globalAlpha = alpha;
-        terminalCtx.fillText(message.text, TERMINAL_PADDING, y);
+        terminalCtx!.fillStyle = message.color;
+        terminalCtx!.globalAlpha = alpha;
+        terminalCtx!.fillText(message.text, TERMINAL_PADDING, y);
         y -= TERMINAL_LINE_HEIGHT * 3;
 
         if (y < TERMINAL_PADDING) break;
       }
 
-      terminalCtx.globalAlpha = 1;
+      terminalCtx!.globalAlpha = 1;
     }
 
     // Draw everything

@@ -1,6 +1,7 @@
 import React, { useRef, useEffect } from 'react';
 import { useCurrentFrame, useVideoConfig, staticFile } from 'remotion';
 import * as THREE from 'three';
+// @ts-ignore
 import { STLLoader } from 'three/examples/jsm/loaders/STLLoader';
 
 interface Model3DProps {

@@ -132,7 +132,7 @@ export function Customize() {
       if (tokenError) throw new Error('Failed to process tokens');
 
       // Create render entry
-      const { data, error } = await supabase
+      const { error } = await supabase
         .from('renders')
         .insert({
           user_id: session.user.id,

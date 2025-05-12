@@ -1,21 +1,6 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { useCurrentFrame } from 'remotion';
 
-const RADIUS_FACTOR = 0.4;
-const COLOR = '#ccc';
-const DARKNESS_FACTOR = 0.7;
-const TILT_ANGLE = 0 / 12;
-const ROTATION_SPEED = 0.003;
-const VERTICAL_LINES = 28;
-const HORIZONTAL_LINES = 19;
-const SQUARE_SIZE = 6;
-const LASER_SQUARE_SIZE = 25;
-const EQUATOR_LINE_WIDTH = 3;
-const LASER_LINE_INDEX = 7;
-const LASER_CIRCLE_ANGLE = (LASER_LINE_INDEX / VERTICAL_LINES) * Math.PI * 2 - Math.PI / 2;
-const LASER_CIRCLE_RADIUS_FACTOR = 2 / 18;
-const LASER_INDENT_FACTOR = 0.95;
-const DRAW_VERTICAL_LINES = false;
 const ASPECT_RATIO = 16 / 9;
 const ROTATE_COLOR = true;
 
@@ -74,7 +59,7 @@ export const DeathStar: React.FC<DeathStarProps> = ({
 
     const centerX = width / 2;
     const centerY = height / 2;
-    const radius = Math.min(width, height) * RADIUS_FACTOR;
+    const radius = Math.min(width, height) * 0.4;
 
     const drawSphere = (rotation: number) => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -89,69 +74,50 @@ export const DeathStar: React.FC<DeathStarProps> = ({
         return `rgba(${parseInt(color.slice(1, 3), 16)}, ${parseInt(color.slice(3, 5), 16)}, ${parseInt(color.slice(5, 7), 16)}, ${alpha})`;
       };
 
-      // Set tiltAngle to 0
       const tiltAngle = 0;
-
-      // Calculate vertical offset based on tilt angle (will be 0)
       const verticalOffset = radius * Math.sin(tiltAngle);
 
-      // Draw vertical lines with squares
-      for (let i = 0; i < VERTICAL_LINES; i++) {
-        const angle = (i / VERTICAL_LINES) * Math.PI * 2 - Math.PI / 2 + rotation;
-        if (DRAW_VERTICAL_LINES) {
-          ctx.beginPath();
-        }
+      for (let i = 0; i < 28; i++) {
+        const angle = (i / 28) * Math.PI * 2 - Math.PI / 2 + rotation;
         for (let j = 0; j <= 180; j++) {
           const lat = (j - 90) * Math.PI / 180;
           let x = centerX + radius * Math.cos(lat) * Math.sin(angle);
           let y = centerY + radius * Math.sin(lat);
           let z = radius * Math.cos(lat) * Math.cos(angle);
 
-          // Apply tilt rotation and vertical offset
           const tiltedY = y * Math.cos(tiltAngle) - z * Math.sin(tiltAngle) + verticalOffset;
           const tiltedZ = y * Math.sin(tiltAngle) + z * Math.cos(tiltAngle);
           y = tiltedY;
           z = tiltedZ;
 
-          if (DRAW_VERTICAL_LINES && (z > 0 || j === 0 || j === 180)) {
-            if (j === 0) ctx.moveTo(x, y);
-            else ctx.lineTo(x, y);
-          }
-
-          // Squares
           if (j % 10 === 0) {
             const darkness = Math.max(0, Math.min(1, ((radius - z) / (2 * radius)) * (darknessFactor / 100)));
             const alpha = 1 - darkness;
             const squareColor = getRotatedColor(alpha);
             
             ctx.fillStyle = squareColor;
-            if (i === LASER_LINE_INDEX && j === 40) {
-              ctx.fillRect(x - LASER_SQUARE_SIZE / 2, y - LASER_SQUARE_SIZE / 2, LASER_SQUARE_SIZE, LASER_SQUARE_SIZE);
-            } else if (!(i === LASER_LINE_INDEX && j >= 80 && j <= 100) &&
-                       !(i === LASER_LINE_INDEX - 1 && j >= 80 && j <= 100) &&
-                       !(i === LASER_LINE_INDEX + 1 && j >= 80 && j <= 100)) {
-              ctx.fillRect(x - SQUARE_SIZE / 2, y - SQUARE_SIZE / 2, SQUARE_SIZE, SQUARE_SIZE);
+            if (i === 7 && j === 40) {
+              ctx.fillRect(x - 25 / 2, y - 25 / 2, 25, 25);
+            } else if (!(i === 7 && j >= 80 && j <= 100) &&
+                       !(i === 6 && j >= 80 && j <= 100) &&
+                       !(i === 8 && j >= 80 && j <= 100)) {
+              ctx.fillRect(x - 6 / 2, y - 6 / 2, 6, 6);
             }
           }
         }
-        if (DRAW_VERTICAL_LINES) {
-          ctx.stroke();
-        }
       }
 
-      // LASER CIRCLE
-      const circleAngle = LASER_CIRCLE_ANGLE + rotation;
+      const circleAngle = (7 / 28) * Math.PI * 2 - Math.PI / 2 + rotation;
       const circleX = centerX + radius * Math.sin(circleAngle);
       const circleY = centerY;
 
-      const circleRadius = LASER_CIRCLE_RADIUS_FACTOR * Math.PI * radius;
+      const circleRadius = (2 / 18) * Math.PI * radius;
       const ellipseRadiusX = circleRadius * Math.abs(Math.cos(circleAngle));
       const ellipseRadiusY = circleRadius;
 
-      const adjustedEllipseRadiusX = ellipseRadiusX * LASER_INDENT_FACTOR;
-      const adjustedEllipseRadiusY = ellipseRadiusY * LASER_INDENT_FACTOR;
+      const adjustedEllipseRadiusX = ellipseRadiusX * 0.95;
+      const adjustedEllipseRadiusY = ellipseRadiusY * 0.95;
 
-      // Apply vertical offset to tiltedCircleY
       const tiltedCircleY = circleY * Math.cos(tiltAngle) - radius * Math.sin(tiltAngle) * Math.cos(circleAngle) + verticalOffset;
 
       const laserCircleDarkness = Math.max(0, Math.min(1, ((radius - radius * Math.cos(circleAngle)) / (2 * radius)) * (darknessFactor / 100)));
@@ -171,7 +137,6 @@ export const DeathStar: React.FC<DeathStarProps> = ({
       ctx.lineWidth = 2;
       ctx.stroke();
 
-      // Draw inner laser circle
       const innerRadiusFactor = 0.7;
       const maxInnerCircleAdjustment = 10;
 
@@ -194,7 +159,6 @@ export const DeathStar: React.FC<DeathStarProps> = ({
       ctx.lineWidth = 1;
       ctx.stroke();
 
-      // Adjust the connecting lines for the inner circle
       ctx.beginPath();
       for (let i = 0; i < 16; i++) {
         const lineAngle = (i / 16) * Math.PI * 2;
@@ -213,9 +177,8 @@ export const DeathStar: React.FC<DeathStarProps> = ({
         ctx.stroke();
       }
 
-      // Draw horizontal equators
       ctx.beginPath();
-      ctx.lineWidth = EQUATOR_LINE_WIDTH;
+      ctx.lineWidth = 3;
       ctx.strokeStyle = getRotatedColor();
 
       const drawEquatorLine = (yOffset: number) => {
@@ -227,7 +190,7 @@ export const DeathStar: React.FC<DeathStarProps> = ({
           const z = radius * Math.cos(angle);
           const tiltedY = (centerY + yOffset) * Math.cos(tiltAngle) - z * Math.sin(tiltAngle) + verticalOffset;
 
-          const isInLaserCircle = Math.abs(angle - circleAngle) <= LASER_CIRCLE_RADIUS_FACTOR * Math.PI;
+          const isInLaserCircle = Math.abs(angle - circleAngle) <= (2 / 18) * Math.PI;
 
           if (!isInLaserCircle) {
             if (!isDrawing) {
@@ -248,11 +211,9 @@ export const DeathStar: React.FC<DeathStarProps> = ({
 
       ctx.lineWidth = 1;
 
-      // Scale the rotation speed
       rotation += rotationSpeed / 1000;
     };
 
-    // Scale the rotation speed
     const rotation = frame * (rotationSpeed / 1000);
     drawSphere(rotation);
   }, [frame, dimensions, color, darknessFactor, rotationSpeed]);

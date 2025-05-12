@@ -15,7 +15,6 @@ interface SpaceGaugesProps {
 }
 
 interface GaugeProps {
-  id: string;
   label: string;
   value: number;
   textColor: string;
@@ -25,7 +24,7 @@ interface GaugeProps {
   optimalColor: string;
 }
 
-const Gauge: React.FC<GaugeProps> = ({ id, label, value, textColor, gaugeColor, criticalColor, cautionColor, optimalColor }) => {
+const Gauge: React.FC<GaugeProps> = ({ label, value, textColor, gaugeColor, criticalColor, cautionColor, optimalColor }) => {
   const status = value < 20 ? 'CRITICAL' : value < 50 ? 'CAUTION' : 'OPTIMAL';
   const statusColor = value < 20 ? criticalColor : value < 50 ? cautionColor : optimalColor;
 
@@ -97,7 +96,6 @@ export const SpaceGauges: React.FC<SpaceGaugesProps> = ({
       )}
       <div className="flex gap-24">
         <Gauge
-          id={firstGaugeName.toLowerCase()}
           label={firstGaugeName}
           value={gaugeValues[firstGaugeName]}
           textColor={textColor}
@@ -107,7 +105,6 @@ export const SpaceGauges: React.FC<SpaceGaugesProps> = ({
           optimalColor={optimalColor}
         />
         <Gauge
-          id={secondGaugeName.toLowerCase()}
           label={secondGaugeName}
           value={gaugeValues[secondGaugeName]}
           textColor={textColor}
@@ -117,7 +114,6 @@ export const SpaceGauges: React.FC<SpaceGaugesProps> = ({
           optimalColor={optimalColor}
         />
         <Gauge
-          id={thirdGaugeName.toLowerCase()}
           label={thirdGaugeName}
           value={gaugeValues[thirdGaugeName]}
           textColor={textColor}

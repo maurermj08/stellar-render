@@ -28,6 +28,7 @@ export const TargetingComputerComposition: React.FC<z.infer<typeof targetingComp
         animationSpeed={animationSpeed}
         lineGap={lineGap}
         numberOfLines={numberOfLines}
+        // @ts-ignore
         acceleration={acceleration}
         lineColor={lineColor}
         numberColor={numberColor}

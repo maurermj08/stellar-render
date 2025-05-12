@@ -4,7 +4,7 @@ import path from 'path'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  base: '/stellar-render/',
+  base: '/',
   plugins: [react()],
   css: {
     postcss: './postcss.config.cjs',

@@ -1,15 +1,6 @@
 import React, { useRef, useEffect, useMemo, useCallback } from 'react';
 import { useCurrentFrame, useVideoConfig, random } from 'remotion';
 
-interface Star {
-  x: number;
-  y: number;
-  z: number;
-  color: string;
-  willTurnBlue: boolean;
-  blueTransitionSpeed: number | null;
-}
-
 interface SpinningStarsProps {
   starCount?: number;
   slowStarSpeed?: number;
@@ -71,7 +62,6 @@ export const SpinningStars: React.FC<SpinningStarsProps> = ({
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    const maxDepth = 32;
     const centerX = width / 2;
     const centerY = height / 2;
 

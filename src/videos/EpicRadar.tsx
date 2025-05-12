@@ -1,6 +1,13 @@
 import React, { useRef, useEffect, useMemo } from 'react';
 import { useCurrentFrame } from 'remotion';
 
+interface TerrainPoint {
+  angle: number;
+  distance: number;
+  opacity: number;
+  lastScan: number;
+}
+
 interface EpicRadarProps {
   backgroundColor?: string;
   radarColor?: string;
@@ -108,30 +115,30 @@ export const EpicRadar: React.FC<EpicRadarProps> = ({
     const traceHistory: number[] = [];
 
     function drawRadar() {
-      ctx.clearRect(0, 0, width, height);
+      ctx!.clearRect(0, 0, width, height);
 
       const { r: radarR, g: radarG, b: radarB } = radarRGB;
 
       // Draw range rings
-      ctx.strokeStyle = `rgba(${radarR}, ${radarG}, ${radarB}, 0.3)`;
-      ctx.lineWidth = 1;
+      ctx!.strokeStyle = `rgba(${radarR}, ${radarG}, ${radarB}, 0.3)`;
+      ctx!.lineWidth = 1;
       for (let i = 1; i <= 4; i++) {
-        ctx.beginPath();
-        ctx.arc(centerX, centerY, radius * i / 4, 0, Math.PI * 2);
-        ctx.stroke();
+        ctx!.beginPath();
+        ctx!.arc(centerX, centerY, radius * i / 4, 0, Math.PI * 2);
+        ctx!.stroke();
       }
 
       // Draw radar circle
-      ctx.strokeStyle = `rgb(${radarR}, ${radarG}, ${radarB})`;
-      ctx.lineWidth = 2;
-      ctx.beginPath();
-      ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
-      ctx.stroke();
+      ctx!.strokeStyle = `rgb(${radarR}, ${radarG}, ${radarB})`;
+      ctx!.lineWidth = 2;
+      ctx!.beginPath();
+      ctx!.arc(centerX, centerY, radius, 0, Math.PI * 2);
+      ctx!.stroke();
 
       // Draw azimuth scale
-      ctx.font = '12px Arial';
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
+      ctx!.font = '12px Arial';
+      ctx!.textAlign = 'center';
+      ctx!.textBaseline = 'middle';
       for (let i = 0; i < 360; i += 5) {
         const angle = (i - 90) * Math.PI / 180;
         const isMajorTick = i % 30 === 0;
@@ -143,61 +150,61 @@ export const EpicRadar: React.FC<EpicRadarProps> = ({
         const x = centerX + labelDistance * Math.cos(angle);
         const y = centerY + labelDistance * Math.sin(angle);
         
-        ctx.beginPath();
-        ctx.moveTo(centerX + tickStart * Math.cos(angle), centerY + tickStart * Math.sin(angle));
-        ctx.lineTo(centerX + tickEnd * Math.cos(angle), centerY + tickEnd * Math.sin(angle));
-        ctx.strokeStyle = `rgba(${radarR}, ${radarG}, ${radarB}, 0.7)`;
-        ctx.stroke();
+        ctx!.beginPath();
+        ctx!.moveTo(centerX + tickStart * Math.cos(angle), centerY + tickStart * Math.sin(angle));
+        ctx!.lineTo(centerX + tickEnd * Math.cos(angle), centerY + tickEnd * Math.sin(angle));
+        ctx!.strokeStyle = `rgba(${radarR}, ${radarG}, ${radarB}, 0.7)`;
+        ctx!.stroke();
         
         if (isMajorTick) {
-          ctx.fillStyle = `rgb(${radarR}, ${radarG}, ${radarB})`;
-          ctx.fillText(i.toString(), x, y);
+          ctx!.fillStyle = `rgb(${radarR}, ${radarG}, ${radarB})`;
+          ctx!.fillText(i.toString(), x, y);
         }
       }
 
       // Draw radar cross section
-      ctx.strokeStyle = `rgba(${radarR}, ${radarG}, ${radarB}, 0.5)`;
-      ctx.lineWidth = 2;
+      ctx!.strokeStyle = `rgba(${radarR}, ${radarG}, ${radarB}, 0.5)`;
+      ctx!.lineWidth = 2;
       for (let i = 0; i < 4; i++) {
-        ctx.beginPath();
+        ctx!.beginPath();
         const angle = (Math.PI / 2) * i;
         const innerRadius = radius * 0.15;
         const outerRadius = radius * 0.85;
-        ctx.moveTo(
+        ctx!.moveTo(
           centerX + Math.cos(angle) * innerRadius,
           centerY + Math.sin(angle) * innerRadius
         );
-        ctx.lineTo(
+        ctx!.lineTo(
           centerX + Math.cos(angle) * outerRadius,
           centerY + Math.sin(angle) * outerRadius
         );
-        ctx.stroke();
+        ctx!.stroke();
       }
 
       // Draw ghosting effect
-      ctx.lineWidth = 2;
+      ctx!.lineWidth = 2;
       traceHistory.forEach((trace, index) => {
         const alpha = (index + 1) / traceHistory.length;
-        ctx.strokeStyle = `rgba(${radarR}, ${radarG}, ${radarB}, ${alpha * 0.5})`;
-        ctx.beginPath();
-        ctx.moveTo(centerX, centerY);
-        ctx.lineTo(
+        ctx!.strokeStyle = `rgba(${radarR}, ${radarG}, ${radarB}, ${alpha * 0.5})`;
+        ctx!.beginPath();
+        ctx!.moveTo(centerX, centerY);
+        ctx!.lineTo(
           centerX + Math.cos(trace) * radius,
           centerY + Math.sin(trace) * radius
         );
-        ctx.stroke();
+        ctx!.stroke();
       });
 
       // Draw current sweeping line
-      ctx.beginPath();
-      ctx.moveTo(centerX, centerY);
-      ctx.lineTo(
+      ctx!.beginPath();
+      ctx!.moveTo(centerX, centerY);
+      ctx!.lineTo(
         centerX + Math.cos(radarAngle) * radius,
         centerY + Math.sin(radarAngle) * radius
       );
-      ctx.strokeStyle = `rgba(${radarR}, ${radarG}, ${radarB}, 0.8)`;
-      ctx.lineWidth = 3;
-      ctx.stroke();
+      ctx!.strokeStyle = `rgba(${radarR}, ${radarG}, ${radarB}, 0.8)`;
+      ctx!.lineWidth = 3;
+      ctx!.stroke();
 
       // Extract RGB values from terrainDotColor
       const terrainRGB = terrainDotColor.match(/\d+/g);
@@ -221,10 +228,10 @@ export const EpicRadar: React.FC<EpicRadarProps> = ({
         const opacity = 1 - opacityFactor;
         
         if (opacity > 0) {
-          ctx.fillStyle = `rgba(${terrainR}, ${terrainG}, ${terrainB}, ${opacity})`;
-          ctx.beginPath();
-          ctx.arc(x, y, terrainPointSize, 0, Math.PI * 2);
-          ctx.fill();
+          ctx!.fillStyle = `rgba(${terrainR}, ${terrainG}, ${terrainB}, ${opacity})`;
+          ctx!.beginPath();
+          ctx!.arc(x, y, terrainPointSize, 0, Math.PI * 2);
+          ctx!.fill();
         }
       });
     }

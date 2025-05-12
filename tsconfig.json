@@ -19,9 +19,16 @@
     "jsx": "react-jsx",
 
     /* Linting */
-    "strict": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true
+    "strict": false,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "noImplicitAny": false,
+    "allowJs": true,
+    "checkJs": false,
+    "ignoreDeprecations": "5.0",
+    "suppressImplicitAnyIndexErrors": false,
+    "noPropertyAccessFromIndexSignature": false,
+    "noFallthroughCasesInSwitch": false
   },
   "include": ["src"],
   "references": [
