@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { TokenIcon } from "@/components/icons/TokenIcon";
 import { Menu, LogOut } from "lucide-react";
 import { useState, useEffect } from "react";
@@ -28,6 +28,7 @@ interface Profile {
 export function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
   const queryClient = useQueryClient();
 
   const { data: session } = useQuery({
@@ -83,73 +84,44 @@ export function Navbar() {
   };
 
   return (
-    <nav className="fixed top-0 inset-x-0 h-16 bg-card/80 backdrop-blur-sm border-b border-primary/10 z-50">
-      <div className="container h-full flex items-center justify-between">
-        <div className="flex items-center gap-8">
-          <CustomVideoIcon />
-          <Link to="/" className="text-2xl font-bold text-primary hover:text-primary-hover transition-colors">
-            Stellar Videos
-          </Link>
-          <div className="hidden md:flex items-center gap-6">
-            <Link to="/" className="text-sm hover:text-primary transition-colors">Gallery</Link>
-            {session?.user && (
-              <Link to="/queue" className="text-sm hover:text-primary transition-colors">Queue</Link>
-            )}
-          </div>
-        </div>
-        
-        <div className="flex items-center gap-4">
-          {session?.user ? (
-            <>
-              <Link to="/profile" className="flex items-center gap-4 group">
-                <div className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 bg-card border border-primary/20 rounded-full group-hover:border-primary/30 transition-colors">
-                  <TokenIcon className="w-4 h-4" />
-                  <span className="text-sm font-medium">{profile?.tokens || 0}</span>
-                </div>
-                <div className="relative">
-                  <div className="absolute inset-0 bg-primary/20 rounded-full blur-lg group-hover:bg-primary/30 transition-colors"></div>
-                  <Avatar className="w-8 h-8 relative">
-                    <AvatarImage src={avatarUrl || undefined} />
-                    <AvatarFallback className="bg-primary/30 text-white font-bold lowercase">
-                      {session.user.email?.charAt(0) || ""}
-                    </AvatarFallback>
-                  </Avatar>
-                </div>
-              </Link>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={handleSignOut}
-                className="text-muted-foreground hover:text-foreground transition-colors"
-              >
-                <LogOut className="h-5 w-5" />
-              </Button>
-            </>
-          ) : (
-            <Link to="/auth">
-              <Button variant="default">Sign In</Button>
+    <>
+      <nav className="fixed top-0 inset-x-0 h-16 bg-card/80 backdrop-blur-sm border-b border-primary/10 z-50">
+        <div className="container h-full flex items-center justify-between">
+          <div className="flex items-center gap-8">
+            <CustomVideoIcon />
+            <Link to="/" className="text-2xl font-bold text-[#FFE169] hover:text-[#FFD700] transition-colors">
+              Stellar Videos
             </Link>
-          )}
+            <div className="hidden md:flex items-center gap-6">
+              <Link 
+                to="/" 
+                className={`text-sm transition-colors ${
+                  location.pathname === '/' 
+                    ? 'text-purple-500 font-medium' 
+                    : 'hover:text-primary'
+                }`}
+              >
+                Gallery
+              </Link>
+              {session?.user && (
+                <Link 
+                  to="/queue" 
+                  className={`text-sm transition-colors ${
+                    location.pathname === '/queue' 
+                      ? 'text-purple-500 font-medium' 
+                      : 'hover:text-primary'
+                  }`}
+                >
+                  Queue
+                </Link>
+              )}
+            </div>
+          </div>
           
-          <button 
-            className="md:hidden p-2"
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-          >
-            <Menu className="w-6 h-6" />
-          </button>
-        </div>
-      </div>
-
-      {isMenuOpen && (
-        <div className="md:hidden py-4 border-t border-primary/20">
-          <div className="flex flex-col space-y-4 px-4">
-            <Link to="/" className="text-sm hover:text-primary transition-colors">Gallery</Link>
-            {session?.user && (
-              <Link to="/queue" className="text-sm hover:text-primary transition-colors">Queue</Link>
-            )}
+          <div className="flex items-center gap-4">
             {session?.user ? (
-              <>
-                <Link to="/profile" className="flex items-center justify-between group">
+              <div className="hidden md:flex items-center gap-4">
+                <Link to="/profile" className="flex items-center gap-4 group">
                   <div className="flex items-center gap-1.5 px-3 py-1.5 bg-card border border-primary/20 rounded-full group-hover:border-primary/30 transition-colors">
                     <TokenIcon className="w-4 h-4" />
                     <span className="text-sm font-medium">{profile?.tokens || 0}</span>
@@ -166,21 +138,88 @@ export function Navbar() {
                 </Link>
                 <Button
                   variant="ghost"
+                  size="icon"
                   onClick={handleSignOut}
                   className="text-muted-foreground hover:text-foreground transition-colors"
                 >
-                  <LogOut className="h-5 w-5 mr-2" />
-                  Sign Out
+                  <LogOut className="h-5 w-5" />
                 </Button>
-              </>
+              </div>
             ) : (
-              <Link to="/auth">
-                <Button variant="default">Sign In</Button>
-              </Link>
+              <div className="hidden md:block">
+                <Link to="/auth">
+                  <Button variant="default">Sign In</Button>
+                </Link>
+              </div>
             )}
+            
+            <button 
+              className="md:hidden p-2"
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+            >
+              <Menu className="w-6 h-6" />
+            </button>
+          </div>
+        </div>
+      </nav>
+
+      {/* Mobile Menu */}
+      {isMenuOpen && (
+        <div className="fixed inset-0 z-40 md:hidden">
+          <div className="fixed inset-0 bg-black/50" onClick={() => setIsMenuOpen(false)} />
+          <div className="fixed top-16 inset-x-0 bg-background border-b border-primary/10">
+            <div className="flex flex-col p-4 space-y-3">
+              <Link 
+                to="/" 
+                className="px-4 py-2 hover:bg-primary/10 rounded-md transition-colors"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Gallery
+              </Link>
+              {session?.user && (
+                <>
+                  <Link 
+                    to="/queue" 
+                    className="px-4 py-2 hover:bg-primary/10 rounded-md transition-colors"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    Queue
+                  </Link>
+                  <Link 
+                    to="/profile" 
+                    className="px-4 py-2 hover:bg-primary/10 rounded-md transition-colors flex items-center justify-between"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    <span>Profile</span>
+                    <div className="flex items-center gap-1.5">
+                      <TokenIcon className="w-4 h-4" />
+                      <span className="text-sm font-medium">{profile?.tokens || 0}</span>
+                    </div>
+                  </Link>
+                  <button
+                    onClick={() => {
+                      setIsMenuOpen(false);
+                      handleSignOut();
+                    }}
+                    className="px-4 py-2 hover:bg-primary/10 rounded-md transition-colors flex items-center text-left w-full"
+                  >
+                    Sign Out
+                  </button>
+                </>
+              )}
+              {!session?.user && (
+                <Link 
+                  to="/auth" 
+                  className="px-4 py-2 bg-primary text-primary-foreground hover:bg-primary/90 rounded-md transition-colors text-center"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Sign In
+                </Link>
+              )}
+            </div>
           </div>
         </div>
       )}
-    </nav>
+    </>
   );
 }

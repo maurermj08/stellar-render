@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Navbar } from "@/components/Navbar";
 import supabase from "@/utils/supabase";
-import { Loader, Clock, Download, Plus, Minus } from "lucide-react";
+import { Loader, Clock, Download, Plus, Minus, Check } from "lucide-react";
 import {
   Table,
   TableBody,
@@ -92,7 +92,7 @@ export function Queue() {
       <div className="min-h-screen">
         <Navbar />
         <main className="container mx-auto px-4 pt-8">
-          <h1 className="text-2xl font-bold mb-6">Render Queue</h1>
+          <h1 className="text-2xl font-bold mb-6">Queue</h1>
           <div className="space-y-4">
             {[...Array(3)].map((_, i) => (
               <div key={i} className="flex items-center gap-4">
@@ -113,13 +113,13 @@ export function Queue() {
     <div className="min-h-screen">
       <Navbar />
       <main className="container mx-auto px-4 pt-8">
-        <h1 className="text-2xl font-bold mb-6">Render Queue</h1>
+        <h1 className="text-2xl font-bold mb-6">Queue</h1>
         <div className="rounded-md border">
           <Table>
             <TableHeader>
               <TableRow>
                 <TableHead>Video</TableHead>
-                <TableHead>Created</TableHead>
+                <TableHead className="hidden sm:table-cell">Created</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead>Actions</TableHead>
               </TableRow>
@@ -139,7 +139,7 @@ export function Queue() {
                             <Button
                               variant="ghost"
                               size="sm"
-                              className="flex items-center gap-2 h-8 px-2 text-primary hover:text-primary/80"
+                              className="flex items-center gap-2 h-8 px-2 text-primary hover:text-white focus:text-white hover:bg-primary focus:bg-primary"
                             >
                               {openDetails[render.id] ? (
                                 <Minus className="h-4 w-4" />
@@ -156,7 +156,7 @@ export function Queue() {
                       )}
                     </div>
                   </TableCell>
-                  <TableCell>
+                  <TableCell className="hidden sm:table-cell">
                     <div className="flex items-center gap-2 text-muted-foreground">
                       <Clock className="h-4 w-4" />
                       {formatDistanceToNow(new Date(render.created_timestamp), {
@@ -168,34 +168,39 @@ export function Queue() {
                     {!render.finished_timestamp ? (
                       <div className="flex items-center gap-2">
                         <Loader className="h-4 w-4 animate-spin" />
-                        <span>Processing</span>
+                        <span className="hidden sm:inline">Processing</span>
                       </div>
                     ) : (
-                      <span className="text-green-500">Completed</span>
+                      <div className="flex items-center gap-2 text-green-500">
+                        <Check className="h-4 w-4" />
+                        <span className="hidden sm:inline">Completed</span>
+                      </div>
                     )}
                   </TableCell>
                   <TableCell>
-                    {render.finished_timestamp && (
-                      <Button
-                        variant="secondary"
-                        size="sm"
-                        className="flex items-center gap-2"
-                        asChild
-                      >
-                        <a
-                          href={supabase.storage
-                            .from('videos')
-                            .getPublicUrl(`${render.uuid}.mp4`)
-                            .data.publicUrl}
-                          download
-                          target="_blank"
-                          rel="noopener noreferrer"
+                    <div className="flex justify-start">
+                      {render.finished_timestamp && (
+                        <Button
+                          variant="secondary"
+                          size="sm"
+                          className="flex items-center gap-2"
+                          asChild
                         >
-                          <Download className="h-4 w-4" />
-                          Download
-                        </a>
-                      </Button>
-                    )}
+                          <a
+                            href={supabase.storage
+                              .from('videos')
+                              .getPublicUrl(`${render.uuid}.mp4`)
+                              .data.publicUrl}
+                            download
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            <Download className="h-4 w-4" />
+                            <span className="hidden sm:inline">Download</span>
+                          </a>
+                        </Button>
+                      )}
+                    </div>
                   </TableCell>
                 </TableRow>
               ))}

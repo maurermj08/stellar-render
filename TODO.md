@@ -166,17 +166,17 @@ SEE: https://www.remotion.dev/docs/player/player
 - [ ] Implement responsive design adjustments
 - [ ] Add loading states and indicators
 - [ ] Each video should have a render cost 
-- [ ] Remove preview videos
+- [x] Remove preview videos
 - [ ] There should be no way to add money without paying
-- [ ] Remove legacy folders
+- [x] Remove legacy folders
 - [ ] Improve read me
 - [ ] Clean old tables
-- [ ] Manually deploy to website
+- [x] Manually deploy to website
 - [ ] Setup automatic deployments
 - [ ] Setup dev and main branch
 - [ ] Setup dev site with URL
-- [ ] Add branch protection
 - [ ] Add alternative storage
+- [ ] Improve github action to quickly check for videos to render before installing packages
 
 ## Phase 6: Beyond
 - [ ] Add Google Auth
