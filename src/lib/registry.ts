@@ -12,6 +12,8 @@ export const compositionMetadataSchema = z.object({
   component: z.any(), // Will be a React component
   schema: z.any(), // Will be a Zod schema
   defaultProps: z.record(z.any()), // Default props for the composition
+  editableFields: z.array(z.string()),
+  renderCost: z.number(),
   tags: z.array(z.string()).optional(),
   thumbnailUrl: z.string().optional(),
   previewVideoUrl: z.string().optional(),
@@ -71,6 +73,8 @@ export const registerCompositionsFromConfig = (config: Record<string, any>) => {
       component: composition.component,
       schema: composition.schema,
       defaultProps: composition.defaultProps,
+      editableFields: composition.editableFields || [],
+      renderCost: composition.renderCost || 0,
     });
   });
 };

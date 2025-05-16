@@ -191,3 +191,13 @@ SEE: https://www.remotion.dev/docs/player/player
 - Core UI components (Button, TokenIcon, VideoCard) have been copied and integrated.
 - Basic routing structure includes Home, Preview, and Customize pages.
 - Supabase URLs and buckets are hardcoded for now but will need to be parameterized in future phases.
+
+### Non-LLM Goals
+- [ ] Clean up existing videos
+- [ ] Get to 25 videos
+- [ ] Add Stripe integration
+- [ ] Add Contact US page
+- [ ] Add EULA/Terms of Service
+- [ ] Add Upload Service
+- [ ] Create new logo & title
+- [ ] Setup script to constantly run

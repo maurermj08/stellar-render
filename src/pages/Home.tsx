@@ -1,9 +1,6 @@
 import { VideoCard } from "@/components/VideoCard";
 import { getAllCompositions } from "@/compositions/loader";
-
-const addSpacesToCamelCase = (text: string) => {
-  return text.replace(/([A-Z])/g, ' $1').trim();
-};
+import { addSpacesToCamelCase } from "../lib/utils";
 
 export function Home() {
   const compositions = getAllCompositions();

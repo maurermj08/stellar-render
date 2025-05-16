@@ -7,6 +7,9 @@ import supabase from '../utils/supabase';
 import { v5 as uuidv5 } from 'uuid';
 import { useToast } from '@/components/ui/use-toast';
 import { useQuery } from '@tanstack/react-query';
+import { add } from 'date-fns';
+import { addSpacesToCamelCase } from "../lib/utils";
+import type { CompositionMetadata } from '../lib/registry';
 
 // Namespace for UUID generation
 const NAMESPACE = "6189bbe8-92e9-4e34-b653-7258e0fc354b";
@@ -164,7 +167,14 @@ export function Customize() {
     return <div>Error: Video ID not found in URL.</div>;
   }
 
-  const composition = compositions[id as keyof typeof compositions];
+  const selectedComp = compositions[id as keyof typeof compositions];
+  const composition = {
+    ...selectedComp,
+    id,
+    name: id,
+    description: '',
+    editableFields: [...selectedComp.editableFields], // Create a new mutable array
+  } as unknown as CompositionMetadata;
 
   if (!composition) {
     return <div>Error: Composition with ID '{id}' not found.</div>;
@@ -172,11 +182,6 @@ export function Customize() {
 
   const { component: Comp, width, height, fps, durationInFrames, schema, defaultProps } = composition;
   const videoName = id; // Removed 'name' property usage
-
-  // Helper function to add spaces to camel case text
-  const addSpacesToCamelCase = (text: string) => {
-    return text.replace(/([A-Z])/g, ' $1').trim();
-  };
 
   // Initialize parameters with defaultProps if not already set
   useState(() => {
@@ -196,6 +201,11 @@ export function Customize() {
 
   // Render form field based on schema type
   const renderField = (key: string, fieldSchema: z.ZodTypeAny) => {
+    // Skip rendering if the field is not in editableFields
+    if (!composition.editableFields.includes(key)) {
+      return null;
+    }
+
     const inputType = getInputTypeFromZodSchema(fieldSchema, key);
     const defaultValue = (defaultProps as Record<string, any>)?.[key] ?? fieldSchema._def.defaultValue?.() ?? '';
     const currentValue = parameters[key] ?? defaultValue;
@@ -312,6 +322,7 @@ export function Customize() {
                   controls
                   fps={fps}
                   durationInFrames={durationInFrames}
+                  allowFullscreen={true}
                   style={{
                     width: '100%',
                     height: '100%',

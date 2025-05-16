@@ -27,6 +27,8 @@ export const compositions = {
           speed: 2,
           starColor: '#FFFFFF',
         },
+        editableFields: ['starCount', 'speed', 'starColor'],
+        renderCost: 0,
       },
       DeathStar: {
         component: DeathStarComposition,
@@ -40,6 +42,8 @@ export const compositions = {
           darknessFactor: 70,
           rotationSpeed: 3,
         },
+        editableFields: ['color', 'darknessFactor', 'rotationSpeed'],
+        renderCost: 0,
       },
       TargetingComputer: {
         component: TargetingComputerComposition,
@@ -57,6 +61,8 @@ export const compositions = {
           numberColor: '#ff0000',
           fontSize: 128,
         },
+        editableFields: ['animationSpeed', 'lineGap', 'numberOfLines', 'lineColor', 'numberColor'],
+        renderCost: 0,
       },
       DonutShield: {
         component: DonutShieldComposition,
@@ -77,6 +83,8 @@ export const compositions = {
           outerCircleColor: 'hsl(220, 100%, 50%)',
           textColor: '#0f0',
         },
+        editableFields: ['donutRotationSpeed', 'message1', 'message2', 'message3', 'message4', 'donutColor', 'innerCircleColor', 'middleCircleColor', 'outerCircleColor', 'textColor'],
+        renderCost: 0,
       },
       EpicRadar: {
         component: EpicRadarComposition,
@@ -96,6 +104,8 @@ export const compositions = {
           terrainSeed: 12345,
           terrainPointSize: 2,
         },
+        editableFields: ['backgroundColor', 'radarColor', 'terrainDotColor', 'radarSpeed', 'terrainPointCount', 'terrainMinDistance', 'terrainMaxDistance', 'terrainSeed', 'terrainPointSize'],
+        renderCost: 0,
       },
       AlertSphere: {
         component: AlertSphereComposition,
@@ -124,6 +134,8 @@ export const compositions = {
           redMessage5: 'Significant combat activity detected',
           useAurekBesh: true,
         },
+        editableFields: ['sphereColor', 'backgroundColor', 'redLabelColor', 'greenLabelColor', 'rotationSpeed', 'sphereSizeRatio', 'tiltAngle', 'greenMessage1', 'greenMessage2', 'greenMessage3', 'greenMessage4', 'greenMessage5', 'redMessage1', 'redMessage2', 'redMessage3', 'redMessage4', 'redMessage5', 'useAurekBesh'],
+        renderCost: 0,
       },
       SpinningStars: {
         component: SpinningStarsComposition,
@@ -145,6 +157,8 @@ export const compositions = {
           regenerateStarsEachFrame: false,
           rotationSpeed: 3,
         },
+        editableFields: ['starCount', 'slowStarSpeed', 'fastStarSpeed', 'slowTailLength', 'fastTailLength', 'phaseDuration', 'transitionDuration', 'defaultStarColor', 'fastStarColor', 'regenerateStarsEachFrame', 'rotationSpeed'],
+        renderCost: 0,
       },
       SpaceGauges: {
         component: SpaceGaugesComposition,
@@ -165,6 +179,8 @@ export const compositions = {
           cautionColor: '#FFFF00',
           optimalColor: '#00FF00',
         },
+        editableFields: ['firstGaugeName', 'secondGaugeName', 'thirdGaugeName', 'toggleStars', 'starsSpeed', 'textColor', 'gaugeColor', 'criticalColor', 'cautionColor', 'optimalColor'],
+        renderCost: 0,
       },
       HothLaser: {
         component: HothLaserComposition,
@@ -177,6 +193,8 @@ export const compositions = {
           triangleCount: 5,
           triangleSize: 32,
         },
+        editableFields: ['triangleCount', 'triangleSize'],
+        renderCost: 0,
       },
       RetroSun: {
         component: RetroSunComposition,
@@ -200,6 +218,8 @@ export const compositions = {
           starMovementSpeed: 58,
           numberOfMountainPoints: 23,
         },
+        editableFields: ['speed', 'backgroundColor', 'gridColor', 'starColor', 'sunGradientColor1', 'sunGradientColor2', 'sunGradientColor3', 'numberOfStars', 'minStarSize', 'maxStarSize', 'sunDiameter', 'starMovementSpeed', 'numberOfMountainPoints'],
+        renderCost: 0,
       },
       SpaceSpiral: {
         component: SpaceSpiralComposition,
@@ -224,6 +244,8 @@ export const compositions = {
           toggleRainbowEffect: false,
           seed: 12345,
         },
+        editableFields: ['turns', 'height', 'radius', 'segments', 'spiralColor', 'starCount', 'minStarSize', 'maxStarSize', 'zoomLevel', 'spiralRotation', 'screenRotation', 'screenRotationSpeed', 'toggleRainbowEffect', 'seed'],
+        renderCost: 0,
       },
       PolygonSpiral: {
         component: SpaceSpiralComposition,
@@ -238,6 +260,7 @@ export const compositions = {
           radius: 2,
           segments: 800,
           spiralColor: "#a8ffc2",
+          toggleRainbowEffect: true,
           starCount: 182,
           minStarSize: 1,
           maxStarSize: 2,
@@ -245,9 +268,10 @@ export const compositions = {
           spiralRotation: 273,
           screenRotation: 60,
           screenRotationSpeed: -2,
-          toggleRainbowEffect: false,
           seed: 12345,
         },
+        editableFields: ['turns', 'height', 'radius', 'segments', 'spiralColor', 'toggleRainbowEffect', 'starCount', 'screenRotationSpeed'],
+        renderCost: 0,
       },
       HalcyonMap: {
         component: GalacticMapComposition,
@@ -279,6 +303,8 @@ export const compositions = {
           logo: 'halcyon' as const,
           changeIntervalInSeconds: 60,
         },
+        editableFields: ['messageText', 'locationText', 'cabinText', 'topLettersColor', 'primaryColor', 'secondaryColor', 'keyPriColor', 'keySecColor', 'planetsColor', 'jumpsColor', 'pathColor', 'routesColor', 'regionColor', 'altPlanetColor', 'graphColor', 'smPathColor', 'backgroundColor', 'regionTextColor', 'showCircle', 'logo', 'changeIntervalInSeconds'],
+        renderCost: 0,
       },
       RebelMap: {
         component: GalacticMapComposition,
@@ -310,6 +336,8 @@ export const compositions = {
           logo: 'rebel' as const,
           changeIntervalInSeconds: 60,
         },
+        editableFields: ['messageText', 'locationText', 'cabinText', 'topLettersColor', 'primaryColor', 'secondaryColor', 'keyPriColor', 'keySecColor', 'planetsColor', 'jumpsColor', 'pathColor', 'routesColor', 'regionColor', 'altPlanetColor', 'graphColor', 'smPathColor', 'backgroundColor', 'regionTextColor', 'showCircle', 'logo', 'changeIntervalInSeconds'],
+        renderCost: 0,
       },
       BobaFettMap: {
         component: GalacticMapComposition,
@@ -341,6 +369,8 @@ export const compositions = {
           logo: 'mandalorian' as const,
           changeIntervalInSeconds: 60,
         },
+        editableFields: ['messageText', 'locationText', 'cabinText', 'topLettersColor', 'primaryColor', 'secondaryColor', 'keyPriColor', 'keySecColor', 'planetsColor', 'jumpsColor', 'pathColor', 'routesColor', 'regionColor', 'altPlanetColor', 'graphColor', 'smPathColor', 'backgroundColor', 'regionTextColor', 'showCircle', 'logo', 'changeIntervalInSeconds'],
+        renderCost: 0,
       },
       FirstOrderMap: {
         component: GalacticMapComposition,
@@ -372,6 +402,8 @@ export const compositions = {
           logo: 'firstorder' as const,
           changeIntervalInSeconds: 60,
         },
+        editableFields: ['messageText', 'locationText', 'cabinText', 'topLettersColor', 'primaryColor', 'secondaryColor', 'keyPriColor', 'keySecColor', 'planetsColor', 'jumpsColor', 'pathColor', 'routesColor', 'regionColor', 'altPlanetColor', 'graphColor', 'smPathColor', 'backgroundColor', 'regionTextColor', 'showCircle', 'logo', 'changeIntervalInSeconds'],
+        renderCost: 0,
       },
       ImperialMap: {
         component: GalacticMapComposition,
@@ -403,6 +435,8 @@ export const compositions = {
           logo: 'imperial' as const,
           changeIntervalInSeconds: 60,
         },
+        editableFields: ['messageText', 'locationText', 'cabinText', 'topLettersColor', 'primaryColor', 'secondaryColor', 'keyPriColor', 'keySecColor', 'planetsColor', 'jumpsColor', 'pathColor', 'routesColor', 'regionColor', 'altPlanetColor', 'graphColor', 'smPathColor', 'backgroundColor', 'regionTextColor', 'showCircle', 'logo', 'changeIntervalInSeconds'],
+        renderCost: 0,
       },
       ScifiGrid: {
         component: ScifiGridComposition,
@@ -418,6 +452,8 @@ export const compositions = {
           animationSpeed: 1,
           gridSpacing: 50,
         },
+        editableFields: ['backgroundColor', 'gridColor', 'scanLineColor', 'animationSpeed', 'gridSpacing'],
+        renderCost: 0,
       },
       Waves3D: {
         component: Waves3DComposition,
@@ -434,6 +470,8 @@ export const compositions = {
           waveHeight: 2,
           waveFrequency: 4,
         },
+        editableFields: ['waveNearColor', 'waveFarColor', 'backgroundColor', 'speed', 'waveHeight', 'waveFrequency'],
+        renderCost: 0,
       },
 } as const;
 

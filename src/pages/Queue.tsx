@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useState, useEffect } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Navbar } from "@/components/Navbar";
 import supabase from "@/utils/supabase";
 import { Loader, Clock, Download, Plus, Minus, Check } from "lucide-react";
@@ -33,6 +33,29 @@ type RenderItem = {
 
 export function Queue() {
   const [openDetails, setOpenDetails] = useState<Record<string, boolean>>({});
+  const queryClient = useQueryClient();
+
+  useEffect(() => {
+    const subscription = supabase
+      .channel('renders-channel')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'renders'
+        },
+        () => {
+          // Invalidate and refetch renders when any change occurs
+          queryClient.invalidateQueries({ queryKey: ['renders'] });
+        }
+      )
+      .subscribe();
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, [queryClient]);
 
   const { data: renders, isLoading } = useQuery({
     queryKey: ["renders"],
