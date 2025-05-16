@@ -12,6 +12,7 @@ import {RetroSunComposition, RetroSunCompSchema} from './compositions/RetroSunCo
 import {Planet3DComposition, Planet3DCompSchema} from './compositions/Planet3DComposition';
 import {GalacticMapComposition, GalacticMapCompSchema} from './compositions/GalacticMapComposition';
 import {SpaceSpiralComposition, SpaceSpiralSchema} from './compositions/SpaceSpiralComposition';
+import { Waves3DComposition, waves3DCompSchema } from './compositions/Waves3DComposition';
 
 export const compositions = {
       SimpleStars: {
@@ -417,7 +418,23 @@ export const compositions = {
           animationSpeed: 1,
           gridSpacing: 50,
         },
-      }
+      },
+      Waves3D: {
+        component: Waves3DComposition,
+        durationInFrames: 900,
+        fps: 30,
+        width: 1920,
+        height: 1080,
+        schema: waves3DCompSchema,
+        defaultProps: {
+          waveNearColor: '#00ffff',
+          waveFarColor: '#ff00ff',
+          backgroundColor: '#101033',
+          speed: 7,
+          waveHeight: 2,
+          waveFrequency: 4,
+        },
+      },
 } as const;
 
 export type CompIds = keyof typeof compositions;

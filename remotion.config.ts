@@ -12,3 +12,6 @@ Config.setVideoImageFormat('jpeg');
 Config.setOverwriteOutput(true);
 Config.setDelayRenderTimeoutInMilliseconds(600000); 
 Config.overrideWebpackConfig(webpackOverride);
+
+// Attempt to use hardware acceleration for WebGL
+Config.setChromiumOpenGlRenderer('angle');
