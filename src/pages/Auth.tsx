@@ -11,6 +11,7 @@ const Auth = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [activeTab, setActiveTab] = useState("signin");
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -70,18 +71,56 @@ const Auth = () => {
     }
   };
 
+  const handlePasswordReset = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!email) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Please enter your email address",
+      });
+      return;
+    }
+    
+    try {
+      setLoading(true);
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${window.location.origin}/reset-password`,
+      });
+      
+      if (error) throw error;
+      
+      toast({
+        title: "Password reset email sent",
+        description: "Check your email for a password reset link",
+      });
+      
+      setEmail("");
+      setActiveTab("signin");
+    } catch (error: any) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: error.message,
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center p-4">
       <Card className="w-full max-w-md">
         <CardHeader>
-          <CardTitle>Welcome</CardTitle>
+          <CardTitle>Welcome to Stellar Videos</CardTitle>
           <CardDescription>Sign in or create a new account</CardDescription>
         </CardHeader>
         <CardContent>
-          <Tabs defaultValue="signin">
-            <TabsList className="grid w-full grid-cols-2 mb-4">
+          <Tabs value={activeTab} onValueChange={setActiveTab}>
+            <TabsList className="grid w-full grid-cols-3 mb-4">
               <TabsTrigger value="signin">Sign In</TabsTrigger>
               <TabsTrigger value="signup">Sign Up</TabsTrigger>
+              <TabsTrigger value="reset">Reset</TabsTrigger>
             </TabsList>
             <TabsContent value="signin">
               <form onSubmit={handleSignIn} className="space-y-4">
@@ -102,6 +141,15 @@ const Auth = () => {
                 <Button type="submit" className="w-full" disabled={loading}>
                   {loading ? "Loading..." : "Sign In"}
                 </Button>
+                <div className="text-center">
+                  <button
+                    type="button"
+                    onClick={() => setActiveTab("reset")}
+                    className="text-sm text-blue-600 hover:underline mt-2"
+                  >
+                    Forgot your password?
+                  </button>
+                </div>
               </form>
             </TabsContent>
             <TabsContent value="signup">
@@ -123,6 +171,32 @@ const Auth = () => {
                 <Button type="submit" className="w-full" disabled={loading}>
                   {loading ? "Loading..." : "Sign Up"}
                 </Button>
+              </form>
+            </TabsContent>
+            <TabsContent value="reset">
+              <form onSubmit={handlePasswordReset} className="space-y-4">
+                <div className="mb-4 text-sm text-gray-500">
+                  Enter your email address and we'll send you a link to reset your password.
+                </div>
+                <Input
+                  type="email"
+                  placeholder="Email"
+                  value={email}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
+                  required
+                />
+                <Button type="submit" className="w-full" disabled={loading}>
+                  {loading ? "Sending..." : "Send Reset Link"}
+                </Button>
+                <div className="text-center">
+                  <button
+                    type="button"
+                    onClick={() => setActiveTab("signin")}
+                    className="text-sm text-blue-600 hover:underline mt-2"
+                  >
+                    Back to Sign In
+                  </button>
+                </div>
               </form>
             </TabsContent>
           </Tabs>

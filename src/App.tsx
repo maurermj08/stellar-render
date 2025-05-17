@@ -5,6 +5,7 @@ import { Customize } from './pages/Customize';
 import { Queue } from './pages/Queue';
 import Auth from './pages/Auth';
 import Profile from './pages/Profile';
+import ResetPassword from './pages/ResetPassword';
 import { Navbar } from './components/Navbar';
 import { registerCompositionsFromConfig } from "./lib/registry";
 import { compositions } from "./compositions.config";
@@ -31,6 +32,7 @@ export default function App() {
               <Route path="/queue" element={<Queue />} />
               <Route path="/auth" element={<Auth />} />
               <Route path="/profile" element={<Profile />} />
+              <Route path="/reset-password" element={<ResetPassword />} />
             </Routes>
           </main>
           <Toaster />
