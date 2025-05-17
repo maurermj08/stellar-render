@@ -7,12 +7,14 @@ export const deathStarSchema = z.object({
   color: zColor(),
   darknessFactor: z.number().min(0).max(100),
   rotationSpeed: z.number().min(0).max(100),
+  Rainbow: z.boolean().default(true),
 });
 
 export const DeathStarComposition: React.FC<z.infer<typeof deathStarSchema>> = ({
   color,
   darknessFactor,
   rotationSpeed,
+  Rainbow = true,
 }) => {
   return (
     <AbsoluteFill className="bg-gray-100 items-center justify-center">
@@ -20,6 +22,7 @@ export const DeathStarComposition: React.FC<z.infer<typeof deathStarSchema>> = (
         color={color}
         darknessFactor={darknessFactor}
         rotationSpeed={rotationSpeed}
+        Rainbow={Rainbow}
       />
     </AbsoluteFill>
   );

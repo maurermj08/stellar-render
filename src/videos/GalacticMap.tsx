@@ -245,9 +245,8 @@ const GalacticMapProps = z.object({
   showCircle: z.boolean(),
   logo: z.string().nullable(),
   changeIntervalInSeconds: z.number(),
+  shipName: z.string(),
 });
-
-const ship = "HALCYON STARCRUISER";
 
 export const GalacticMap: React.FC<z.infer<typeof GalacticMapProps>> = ({
   messageText,
@@ -271,6 +270,7 @@ export const GalacticMap: React.FC<z.infer<typeof GalacticMapProps>> = ({
   showCircle,
   logo,
   changeIntervalInSeconds,
+  shipName,
 }) => {
 	const [currentImageIndex, setCurrentImageIndex] = useState(0);
 	const { fps, durationInFrames, width } = useVideoConfig();
@@ -478,12 +478,12 @@ export const GalacticMap: React.FC<z.infer<typeof GalacticMapProps>> = ({
 							<text
 								transform="matrix(0.9286589622497559 0.0000000000000000 0.0000000000000000 1.0000000000000000 400.00 159.00)">
 								<tspan className="title" letterSpacing="0.05em" fill={ topLettersColor }
-									fillOpacity="1" strokeWidth="0.2" strokeLinejoin="round">{ ship.toUpperCase() }</tspan>
+									fillOpacity="1" strokeWidth="0.2" strokeLinejoin="round">{ shipName.toUpperCase() }</tspan>
 							</text>
 							<text
 								transform="matrix(1.9477475881576538 0.0000000000000000 0.0000000000000000 1.0000000000000000 400.00 118.00)">
 								<tspan className="title-besh" letterSpacing="0.01em"
-									fill={ topLettersColor } fillOpacity="1" strokeWidth="0.2" strokeLinejoin="round">{ ship }
+									fill={ topLettersColor } fillOpacity="1" strokeWidth="0.2" strokeLinejoin="round">{ shipName }
 								</tspan>
 							</text>
 							<line fill="none" strokeWidth="6" strokeLinejoin="round" stroke={ secondaryColor } strokeOpacity="1" x1="2745"

@@ -197,9 +197,9 @@ SEE: https://www.remotion.dev/docs/player/player
 - [ ] Get to 25 videos
 - [ ] Add Stripe integration
 - [ ] Add Contact US page
-- [ ] Add EULA/Terms of Service
-- [ ] Reset password
-- [ ] Forget password
+- [x] Add EULA/Terms of Service
+- [x] Reset password
+- [x] Forget password
 - [x] Add Upload Service
 - [x] Create new logo & title
 - [ ] Setup script to constantly run

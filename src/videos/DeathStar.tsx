@@ -2,18 +2,19 @@ import React, { useRef, useEffect, useState } from 'react';
 import { useCurrentFrame } from 'remotion';
 
 const ASPECT_RATIO = 16 / 9;
-const ROTATE_COLOR = true;
 
 interface DeathStarProps {
   color: string;
   darknessFactor: number; 
   rotationSpeed: number;
+  Rainbow: boolean;
 }
 
 export const DeathStar: React.FC<DeathStarProps> = ({
   color,
   darknessFactor,
-  rotationSpeed
+  rotationSpeed,
+  Rainbow
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -67,7 +68,7 @@ export const DeathStar: React.FC<DeathStarProps> = ({
       ctx.lineWidth = 1;
 
       const getRotatedColor = (alpha: number = 1) => {
-        if (ROTATE_COLOR) {
+        if (Rainbow) {
           const hue = frame % 360;
           return `hsla(${hue}, 100%, 50%, ${alpha})`;
         }
@@ -216,7 +217,7 @@ export const DeathStar: React.FC<DeathStarProps> = ({
 
     const rotation = frame * (rotationSpeed / 1000);
     drawSphere(rotation);
-  }, [frame, dimensions, color, darknessFactor, rotationSpeed]);
+  }, [frame, dimensions, color, darknessFactor, rotationSpeed, Rainbow]);
 
   return (
     <div ref={containerRef} className="w-full h-full bg-black flex items-center justify-center">

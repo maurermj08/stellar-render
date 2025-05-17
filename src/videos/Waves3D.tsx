@@ -9,6 +9,19 @@ export interface Waves3DProps {
   speed: number; // 0-100, divided by 10 for final value
   waveHeight: number;
   waveFrequency: number;
+  // New props for previously constant values
+  gridSize?: number;
+  gridDivisions?: number;
+  fogNear?: number;
+  fogFar?: number;
+  cameraFov?: number;
+  cameraNear?: number;
+  cameraFar?: number;
+  gridSolidFill?: boolean;
+  valleyDepth?: number;
+  valleyFalloff?: number;
+  mountainRandomness?: number;
+  mountainSeed?: number;
 }
 
 export const Waves3D: React.FC<Waves3DProps> = ({
@@ -18,29 +31,41 @@ export const Waves3D: React.FC<Waves3DProps> = ({
   speed,
   waveHeight,
   waveFrequency,
+  gridSize = 140,
+  gridDivisions = 41,
+  fogNear = 10,
+  fogFar = 90,
+  cameraFov = 40,
+  cameraNear = 1,
+  cameraFar = 100,
+  gridSolidFill = false,
+  valleyDepth = 10,
+  valleyFalloff = 1,
+  mountainRandomness = 0.1,
+  mountainSeed = 42,
 }) => {
   const frame = useCurrentFrame();
   const { width, height } = useVideoConfig();
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   // === CONFIGURABLE CONSTANTS (adapted from HTML) ===
-  const GRID_SIZE = 140;
-  const GRID_DIVISIONS = 41; // Keep odd for a center line if needed, or if math assumes it
-  const FOG_NEAR = 10;
-  const FOG_FAR = 90;
+  const GRID_SIZE = gridSize;
+  const GRID_DIVISIONS = gridDivisions; // Keep odd for a center line if needed, or if math assumes it
+  const FOG_NEAR = fogNear;
+  const FOG_FAR = fogFar;
   const CAMERA_POSITION = { x: 0, y: 10, z: 30 };
   const CAMERA_LOOK_AT = { x: 0, y: 0, z: -30 };
-  const CAMERA_FOV = 40;
-  const CAMERA_NEAR = 1;
-  const CAMERA_FAR = 100;
-  const GRID_SOLID_FILL = false; // Set to true for solid fill, false for lines
-  const VALLEY_DEPTH = 10;
-  const VALLEY_FALLOFF = 1;
+  const CAMERA_FOV = cameraFov;
+  const CAMERA_NEAR = cameraNear;
+  const CAMERA_FAR = cameraFar;
+  const GRID_SOLID_FILL = gridSolidFill;
+  const VALLEY_DEPTH = valleyDepth;
+  const VALLEY_FALLOFF = valleyFalloff;
   const MOUNTAIN_HEIGHT = waveHeight; // Use prop
   const MOUNTAIN_FREQ_X = waveFrequency; // Use prop
   const MOUNTAIN_FREQ_Z = waveFrequency; // Use prop
-  const MOUNTAIN_RANDOMNESS = 0.1;
-  const MOUNTAIN_SEED = 42;
+  const MOUNTAIN_RANDOMNESS = mountainRandomness;
+  const MOUNTAIN_SEED = mountainSeed;
   const gridSpeed = speed / 10; // Use prop
 
   useEffect(() => {

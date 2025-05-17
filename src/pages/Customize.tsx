@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { Player } from '@remotion/player';
 import { compositions } from '../compositions.config';
@@ -32,7 +32,7 @@ const getInputTypeFromZodSchema = (schema: z.ZodTypeAny, key: string) => {
   });
 
   // Check final type
-  if (innerType._def.typeName === 'ZodColor' || key.endsWith('Color')) {
+  if (innerType._def.typeName === 'ZodColor' || key.toLocaleLowerCase().endsWith('color')) {
     console.log(`Field "${key}" detected as color input`);
     return 'color';
   }
@@ -41,7 +41,7 @@ const getInputTypeFromZodSchema = (schema: z.ZodTypeAny, key: string) => {
     return 'number'; 
   }
   if (innerType._def.typeName === 'ZodString') {
-    if (key.endsWith('Color')) {
+    if (key.endsWith('Color') || key.toLowerCase() === 'color') {
       console.log(`Field "${key}" detected as color input (by name)`);
       return 'color';
     }
@@ -77,6 +77,11 @@ const getNumberConstraints = (schema: z.ZodNumber) => {
 };
 
 export function Customize() {
+  // Scroll to top on mount
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   const { id } = useParams<{ id: string }>();
   const [parameters, setParameters] = useState<Record<string, any>>({});
   const navigate = useNavigate();
@@ -299,7 +304,7 @@ export function Customize() {
   };
 
   return (
-    <div className="container mx-auto py-8 px-4">
+    <div className="container mx-auto pt-2 pb-8 px-4">
       <div className="max-w-7xl mx-auto space-y-8">
         {/* Breadcrumbs - only shown on md and larger screens */}
         <div className="hidden md:flex items-center gap-2 text-sm text-muted-foreground">

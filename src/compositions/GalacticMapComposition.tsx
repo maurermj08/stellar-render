@@ -25,6 +25,7 @@ export const GalacticMapCompSchema = z.object({
   showCircle: z.boolean(),
   logo: z.enum(['firstorder', 'imperial', 'rebel', 'mandalorian', 'halcyon', 'falcon']),
   changeIntervalInSeconds: z.number(),
+  shipName: z.string(),
 });
 
 export const GalacticMapComposition: React.FC<z.infer<typeof GalacticMapCompSchema>> = (props) => {
