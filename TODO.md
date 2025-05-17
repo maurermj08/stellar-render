@@ -198,6 +198,8 @@ SEE: https://www.remotion.dev/docs/player/player
 - [ ] Add Stripe integration
 - [ ] Add Contact US page
 - [ ] Add EULA/Terms of Service
-- [ ] Add Upload Service
+- [ ] Reset password
+- [ ] Forget password
+- [x] Add Upload Service
 - [ ] Create new logo & title
 - [ ] Setup script to constantly run
