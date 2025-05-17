@@ -40,3 +40,19 @@
 .read-the-docs {
   color: #888;
 }
+
+/* Terms of Service page custom styles */
+.tos-blue h1,
+.tos-blue h2,
+.tos-blue h3,
+.tos-blue strong {
+  color: #60a5fa !important; /* Tailwind's blue-400 */
+}
+.tos-blue ul {
+  list-style-type: none;
+  padding-left: 0;
+}
+.tos-blue a {
+  color: #60a5fa !important; /* Tailwind's blue-400 */
+  text-decoration: underline;
+}

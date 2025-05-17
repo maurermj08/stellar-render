@@ -6,11 +6,14 @@ import { Queue } from './pages/Queue';
 import Auth from './pages/Auth';
 import Profile from './pages/Profile';
 import ResetPassword from './pages/ResetPassword';
+import ChangePassword from './pages/ChangePassword';
+import TermsOfService from './pages/TermsOfService';
 import { Navbar } from './components/Navbar';
 import { registerCompositionsFromConfig } from "./lib/registry";
 import { compositions } from "./compositions.config";
 import { Toaster } from './components/ui/toaster';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import Footer from './components/Footer';
 
 // Register all compositions when the app starts
 registerCompositionsFromConfig(compositions);
@@ -33,9 +36,12 @@ export default function App() {
               <Route path="/auth" element={<Auth />} />
               <Route path="/profile" element={<Profile />} />
               <Route path="/reset-password" element={<ResetPassword />} />
+              <Route path="/change-password" element={<ChangePassword />} />
+              <Route path="/terms-of-service" element={<TermsOfService />} />
             </Routes>
           </main>
           <Toaster />
+          <Footer />
         </div>
       </Router>
     </QueryClientProvider>

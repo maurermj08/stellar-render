@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useToast } from "@/components/ui/use-toast";
 import supabase from "@/utils/supabase";
-import { Upload, Trash2 } from "lucide-react";
+import { Upload, Trash2, LockKeyhole } from "lucide-react";
 import { Card, CardHeader, CardContent, CardFooter } from "@/components/ui/card";
 import { TokenIcon } from "@/components/icons/TokenIcon";
 import { useQueryClient } from "@tanstack/react-query";
@@ -228,6 +228,15 @@ const Profile = () => {
                 <span className="text-lg font-semibold">
                   {tokens} {tokens == 1 ? 'token' : 'tokens'} available
                 </span>
+              </div>
+              <div className="mt-3">
+                <Link 
+                  to="/change-password"
+                  className="inline-flex items-center gap-1 text-sm text-primary hover:text-primary/80 hover:underline"
+                >
+                  <LockKeyhole className="w-4 h-4" />
+                  Change Password
+                </Link>
               </div>
             </div>
           </div>

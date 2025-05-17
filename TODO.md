@@ -201,5 +201,5 @@ SEE: https://www.remotion.dev/docs/player/player
 - [ ] Reset password
 - [ ] Forget password
 - [x] Add Upload Service
-- [ ] Create new logo & title
+- [x] Create new logo & title
 - [ ] Setup script to constantly run
