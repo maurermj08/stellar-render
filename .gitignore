@@ -32,3 +32,17 @@ sandbox/
 
 # Remotion
 out/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+ENV/
+env/
+.env
+.venv
+pythonenv*
+.pytest_cache/

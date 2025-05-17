@@ -210,10 +210,7 @@ export function Queue() {
                           asChild
                         >
                           <a
-                            href={supabase.storage
-                              .from('videos')
-                              .getPublicUrl(`${render.uuid}.mp4`)
-                              .data.publicUrl}
+                            href={`https://stellarvideos.nyc3.digitaloceanspaces.com/stellarvideos/videos/${render.uuid}.mp4`}
                             download
                             target="_blank"
                             rel="noopener noreferrer"
