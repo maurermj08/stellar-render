@@ -136,7 +136,14 @@ export function Queue() {
     <div className="min-h-screen">
       <Navbar />
       <main className="container mx-auto px-4 pt-8">
-        <h1 className="text-2xl font-bold mb-6">Queue</h1>
+        <div className="flex items-center justify-between mb-8">
+          <h1 className="text-4xl font-bold">Queue</h1>
+          <div className="flex items-center gap-4">
+            <div className="text-sm text-muted-foreground">
+              {renders ? renders.length : 0} videos in queue
+            </div>
+          </div>
+        </div>
         <div className="rounded-md border">
           <Table>
             <TableHeader>

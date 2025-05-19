@@ -6,7 +6,7 @@ export function Home() {
   const compositions = getAllCompositions();
 
   return (
-    <div className="container py-8 space-y-8">
+    <div className="md:container py-8 space-y-8">
       <div className="flex items-center justify-between">
         <h1 className="text-4xl font-bold">Gallery</h1>
         <div className="flex items-center gap-4">

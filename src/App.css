@@ -56,3 +56,42 @@
   color: #60a5fa !important; /* Tailwind's blue-400 */
   text-decoration: underline;
 }
+
+/*
+  Stardust animation for the CustomText SVG logo:
+  - Letters float gently with a blue/golden glow
+  - Continuous subtle animation instead of periodic flashing
+*/
+.stellar-animated-logo path {
+  fill: #ffe169;
+  filter: drop-shadow(0 0 3px rgba(255, 225, 105, 0.5));
+  animation: stellar-float 3s ease-in-out infinite, stellar-glow 4s ease-in-out infinite;
+}
+
+/* Add random delay to each path for more natural movement */
+.stellar-animated-logo path:nth-child(2n) {
+  animation-delay: 0.5s, 1s;
+}
+.stellar-animated-logo path:nth-child(3n) {
+  animation-delay: 1s, 0.5s;
+}
+.stellar-animated-logo path:nth-child(4n) {
+  animation-delay: 1.5s, 1.5s;
+}
+.stellar-animated-logo path:nth-child(5n) {
+  animation-delay: 2s, 2s;
+}
+
+@keyframes stellar-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-2px); }
+}
+
+@keyframes stellar-glow {
+  0%, 100% { 
+    filter: drop-shadow(0 0 2px rgba(255, 225, 105, 0.5));
+  }
+  50% { 
+    filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.8)) drop-shadow(0 0 10px rgba(30, 144, 255, 0.3));
+  }
+}

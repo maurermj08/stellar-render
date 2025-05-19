@@ -27,7 +27,7 @@ export default function App() {
       <Router>
         <div className="min-h-screen bg-background text-foreground antialiased">
           <Navbar />
-          <main className="pt-16">
+          <main className="pt-8">
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/preview/:id" element={<Preview />} />

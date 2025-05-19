@@ -1,4 +1,4 @@
-import { Play, Settings } from "lucide-react";
+import { Play, Pause, Settings } from "lucide-react";
 import { TokenIcon } from "@/components/icons/TokenIcon";
 import { Link } from "react-router-dom";
 import { useState } from "react";
@@ -22,10 +22,16 @@ export const VideoCard = ({
   defaultProps 
 }: VideoCardProps) => {
   const [isPlaying, setIsPlaying] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
   
-  const handlePlayClick = (e: React.MouseEvent) => {
+  const handlePlayPauseClick = (e: React.MouseEvent) => {
     e.preventDefault();
-    setIsPlaying(true);
+    if (!isPlaying) {
+      setIsPlaying(true);
+      setIsPaused(false);
+    } else {
+      setIsPaused(!isPaused);
+    }
   };
 
   const renderPreview = () => {
@@ -42,7 +48,7 @@ export const VideoCard = ({
           fps={30}
           compositionWidth={1920}
           compositionHeight={1080}
-          autoPlay={true}
+          autoPlay={!isPaused}
           loop
           style={{
             width: '100%',
@@ -81,11 +87,15 @@ export const VideoCard = ({
         <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-6">
           <button 
             className="p-4 rounded-full bg-primary hover:bg-primary-hover transition-colors"
-            title="Preview"
-            aria-label="Preview video"
-            onClick={handlePlayClick}
+            title={isPlaying ? (isPaused ? "Play" : "Pause") : "Preview"}
+            aria-label={isPlaying ? (isPaused ? "Play video" : "Pause video") : "Preview video"}
+            onClick={handlePlayPauseClick}
           >
-            <Play className="w-6 h-6 sm:w-7 sm:h-7" />
+            {isPlaying ? (
+              isPaused ? <Play className="w-6 h-6 sm:w-7 sm:h-7" /> : <Pause className="w-6 h-6 sm:w-7 sm:h-7" />
+            ) : (
+              <Play className="w-6 h-6 sm:w-7 sm:h-7" />
+            )}
           </button>
           <Link 
             to={`/customize/${id}`}

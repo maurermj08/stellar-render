@@ -193,7 +193,7 @@ SEE: https://www.remotion.dev/docs/player/player
 - Supabase URLs and buckets are hardcoded for now but will need to be parameterized in future phases.
 
 ### Non-LLM Goals
-- [ ] Clean up existing videos
+- [X] Clean up existing videos
 - [ ] Get to 25 videos
 - [ ] Add Stripe integration
 - [ ] Add Contact US page
