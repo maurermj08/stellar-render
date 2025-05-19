@@ -139,9 +139,7 @@ export function Navbar() {
             </div> */}
 
             <div className="w-[160px] mt-2">
-              <Link to="/" aria-label="Back to Gallery" tabIndex={0} className="block focus:outline-none">
-                <CustomText />
-              </Link>
+              <CustomText />
             </div>
             {/* <Link to="/" className="text-2xl font-bold text-[#FFE169] hover:text-[#FFD700] transition-colors">
               Stellar Videos
@@ -175,11 +173,11 @@ export function Navbar() {
           <div className="flex items-center gap-4">
             {session?.user ? (
               <div className="hidden md:flex items-center gap-4">
-                <Link to="/profile" className="flex items-center gap-4 group">
-                  <div className="flex items-center gap-1.5 px-3 py-1.5 bg-card border border-primary/20 rounded-full group-hover:border-primary/30 transition-colors">
+                <Link to="/profile" className="flex items-center gap-2 group">
+                  <span className="flex items-center gap-1.5 px-3 py-1.5 bg-card border border-primary/20 rounded-full group-hover:border-primary/30 transition-colors">
                     <TokenIcon className="w-4 h-4" />
                     <span className="text-sm font-medium">{profile?.tokens || 0}</span>
-                  </div>
+                  </span>
                   <div className="relative">
                     <div className="absolute inset-0 bg-primary/20 rounded-full blur-lg group-hover:bg-primary/30 transition-colors"></div>
                     <Avatar className="w-8 h-8 relative">
@@ -225,7 +223,7 @@ export function Navbar() {
             <div className="flex flex-col p-4 space-y-3">
               <Link 
                 to="/" 
-                className="px-4 py-2 hover:bg-primary/10 rounded-md transition-colors"
+                className="px-4 py-2 hover:bg-primary/10 rounded-md transition-colors text-center"
                 onClick={() => setIsMenuOpen(false)}
               >
                 Gallery
@@ -234,31 +232,33 @@ export function Navbar() {
                 <>
                   <Link 
                     to="/queue" 
-                    className="px-4 py-2 hover:bg-primary/10 rounded-md transition-colors"
+                    className="px-4 py-2 hover:bg-primary/10 rounded-md transition-colors text-center"
                     onClick={() => setIsMenuOpen(false)}
                   >
                     Queue
                   </Link>
-                  <Link 
-                    to="/profile" 
-                    className="px-4 py-2 hover:bg-primary/10 rounded-md transition-colors flex items-center justify-between"
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    <span>Profile</span>
-                    <div className="flex items-center gap-1.5">
-                      <TokenIcon className="w-4 h-4" />
-                      <span className="text-sm font-medium">{profile?.tokens || 0}</span>
-                    </div>
-                  </Link>
-                  <button
-                    onClick={() => {
-                      setIsMenuOpen(false);
-                      handleSignOut();
-                    }}
-                    className="px-4 py-2 hover:bg-primary/10 rounded-md transition-colors flex items-center text-left w-full"
-                  >
-                    Sign Out
-                  </button>
+                  <div className="flex flex-col items-center w-full">
+                    <Link 
+                      to="/profile" 
+                      className="px-4 py-2 hover:bg-primary/10 rounded-md transition-colors flex items-center justify-center w-full gap-2"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      <span>Profile</span>
+                      <div className="flex items-center gap-1">
+                        <TokenIcon className="w-4 h-4" />
+                        <span className="text-sm font-medium">{profile?.tokens || 0}</span>
+                      </div>
+                    </Link>
+                    <button
+                      onClick={() => {
+                        setIsMenuOpen(false);
+                        handleSignOut();
+                      }}
+                      className="px-4 py-2 hover:bg-primary/10 rounded-md transition-colors flex items-center justify-center w-full text-left"
+                    >
+                      Sign Out
+                    </button>
+                  </div>
                 </>
               )}
               {!session?.user && (

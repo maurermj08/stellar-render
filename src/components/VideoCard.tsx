@@ -1,4 +1,4 @@
-import { Play, Pause, Settings } from "lucide-react";
+import { Play, Pause, SquarePen } from "lucide-react";
 import { TokenIcon } from "@/components/icons/TokenIcon";
 import { Link } from "react-router-dom";
 import { useState } from "react";
@@ -103,7 +103,7 @@ export const VideoCard = ({
             title="Customize"
             aria-label="Customize video"
           >
-            <Settings className="w-6 h-6 sm:w-7 sm:h-7" />
+            <SquarePen className="w-6 h-6 sm:w-7 sm:h-7" />
           </Link>
         </div>
         <span className="absolute bottom-2 right-2 px-2 py-1 bg-black/60 rounded text-sm">
@@ -115,7 +115,7 @@ export const VideoCard = ({
         className="p-4 flex items-center justify-between"
       >
         <div className="flex items-center gap-2">
-          {isPlaying && <Settings className="w-5 h-5" />}
+          {isPlaying && <SquarePen className="w-5 h-5" />}
           <h3 className="font-semibold text-lg truncate">{name}</h3>
         </div>
         <div className="flex items-center gap-1.5 px-2 py-1 bg-card/80 border border-primary/20 rounded-full">

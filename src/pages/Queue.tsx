@@ -19,6 +19,7 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
+import { compositions } from "@/compositions.config";
 
 type RenderItem = {
   id: number;
@@ -79,18 +80,21 @@ export function Queue() {
     },
   });
 
-  const renderParameters = (parameters: Record<string, any> | undefined) => {
+  const renderParameters = (video: string, parameters: Record<string, any> | undefined) => {
     if (!parameters || typeof parameters !== 'object' || Array.isArray(parameters)) {
       return null;
     }
-
-    if (Object.keys(parameters).length === 0) {
+    const comp = compositions[video as keyof typeof compositions];
+    if (!comp) return null;
+    // @ts-expect-error: Suppress type error for editableFields type
+    const editableFields = comp.editableFields as string[];
+    const filteredEntries = Object.entries(parameters).filter(([key]) => editableFields.includes(key));
+    if (filteredEntries.length === 0) {
       return null;
     }
-    
     return (
       <div className="space-y-1">
-        {Object.entries(parameters).map(([key, value]) => (
+        {filteredEntries.map(([key, value]) => (
           <div key={key} className="text-sm">
             <span className="font-medium">{key}:</span>{' '}
             {typeof value === 'string' && /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/.test(value) ? (
@@ -135,7 +139,7 @@ export function Queue() {
   return (
     <div className="min-h-screen">
       <Navbar />
-      <main className="container mx-auto px-4 pt-8">
+      <main className="mx-auto md:px-4 sm:px-0 pt-8">
         <div className="flex items-center justify-between mb-8">
           <h1 className="text-4xl font-bold">Queue</h1>
           <div className="flex items-center gap-4">
@@ -159,7 +163,7 @@ export function Queue() {
                 <TableRow key={render.id}>
                   <TableCell className="font-medium">
                     <div className="space-y-2">
-                      <div>{render.video || "Unknown Video"}</div>
+                      <div className="text-left">{render.video || "Unknown Video"}</div>
                       {render.parameters && Object.keys(render.parameters).length > 0 && (
                         <Collapsible
                           open={openDetails[render.id]}
@@ -180,7 +184,7 @@ export function Queue() {
                             </Button>
                           </CollapsibleTrigger>
                           <CollapsibleContent className="text-sm text-muted-foreground bg-primary/5 rounded-md p-2 mt-2">
-                            {renderParameters(render.parameters)}
+                            {renderParameters(render.video, render.parameters)}
                           </CollapsibleContent>
                         </Collapsible>
                       )}
