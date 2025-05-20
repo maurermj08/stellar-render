@@ -16,47 +16,28 @@ const NAMESPACE = "6189bbe8-92e9-4e34-b653-7258e0fc354b";
 
 // Helper function to get input type based on Zod schema
 const getInputTypeFromZodSchema = (schema: z.ZodTypeAny, key: string) => {
-  console.log(`Checking type for field "${key}":`, {
-    originalType: schema._def.typeName,
-    innerType: schema._def.innerType?._def.typeName,
-    fullSchema: schema,
-  });
-
   // Handle ZodDefault by unwrapping the inner type
   const innerType = schema._def.typeName === 'ZodDefault' ? schema._def.innerType : schema;
 
-  // Log the unwrapped type
-  console.log(`Unwrapped type for "${key}":`, {
-    unwrappedType: innerType._def.typeName,
-    fullInnerType: innerType,
-  });
-
   // Check final type
   if (innerType._def.typeName === 'ZodColor' || key.toLocaleLowerCase().endsWith('color')) {
-    console.log(`Field "${key}" detected as color input`);
     return 'color';
   }
   if (innerType._def.typeName === 'ZodNumber') {
-    console.log(`Field "${key}" detected as number input`);
     return 'number'; 
   }
   if (innerType._def.typeName === 'ZodString') {
     if (key.endsWith('Color') || key.toLowerCase() === 'color') {
-      console.log(`Field "${key}" detected as color input (by name)`);
       return 'color';
     }
-    console.log(`Field "${key}" detected as text input`);
     return 'text';
   }
   if (innerType._def.typeName === 'ZodBoolean') {
-    console.log(`Field "${key}" detected as checkbox input`);
     return 'checkbox';
   }
   if (innerType._def.typeName === 'ZodEnum') {
-    console.log(`Field "${key}" detected as select input`);
     return 'select';
   }
-  console.log(`Field "${key}" defaulting to text input`);
   return 'text';
 };
 
@@ -225,6 +206,7 @@ export function Customize() {
             </label>
             <input
               type="number"
+              inputMode="decimal"
               value={currentValue}
               onChange={(e) => updateParameter(key, parseFloat(e.target.value) || 0)}
               min={min}
@@ -335,6 +317,7 @@ export function Customize() {
                   inputProps={parameters}
                   autoPlay
                   loop
+                  acknowledgeRemotionLicense={true}
                 />
               </div>
             </div>

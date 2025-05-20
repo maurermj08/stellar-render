@@ -50,6 +50,7 @@ export const VideoCard = ({
           compositionHeight={1080}
           autoPlay={!isPaused}
           loop
+          acknowledgeRemotionLicense={true}
           style={{
             width: '100%',
             height: '100%',
@@ -115,7 +116,6 @@ export const VideoCard = ({
         className="p-4 flex items-center justify-between"
       >
         <div className="flex items-center gap-2">
-          {isPlaying && <SquarePen className="w-5 h-5" />}
           <h3 className="font-semibold text-lg truncate">{name}</h3>
         </div>
         <div className="flex items-center gap-1.5 px-2 py-1 bg-card/80 border border-primary/20 rounded-full">

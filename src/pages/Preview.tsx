@@ -35,10 +35,13 @@ export function Preview() {
             compositionWidth={composition.width}
             compositionHeight={composition.height}
             inputProps={composition.defaultProps}
+            acknowledgeRemotionLicense={true}
             style={{
               width: '100%',
               height: '100%',
             }}
+            controls
+            loop
           />
         </div>
         <div className="flex gap-4">
