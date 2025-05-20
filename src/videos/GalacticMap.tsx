@@ -329,7 +329,7 @@ export const GalacticMap: React.FC<z.infer<typeof GalacticMapProps>> = ({
 				<div className="map">
 					<Loop durationInFrames={1 * frames * MAPS.length}>
 						{MAPS.map(function (MapComponent, i) {
-							return (<Sequence from={frames * i} durationInFrames={frames}>
+							return (<Sequence key={`map-${i}`} from={frames * i} durationInFrames={frames}>
 								<MapComponent 
                   // @ts-ignore
                   topLettersColor={topLettersColor}
@@ -360,7 +360,7 @@ export const GalacticMap: React.FC<z.infer<typeof GalacticMapProps>> = ({
 								src={staticFile(`/logos/${logo}.svg`)}
 							/>
 						)}
-						<svg className="banner" viewBox="0 0 2854 442" preserveAspectRatio="None">
+						<svg className="banner" viewBox="0 0 2854 442">
 							<rect x="2147" y="0.499756" fill="#030409" fillOpacity="1" fillRule="evenodd" strokeLinejoin="round"
 								width="704" height="372" />
 							<rect x="1379" y="0.5" fill="#030409" fillOpacity="1" fillRule="evenodd" strokeLinejoin="round"
@@ -529,7 +529,7 @@ export const GalacticMap: React.FC<z.infer<typeof GalacticMapProps>> = ({
 					</div>
 					<svg className="banner-bottom" xmlns="http://www.w3.org/2000/svg" xlinkHref="http://www.w3.org/1999/xlink"
 						version="1.1" baseProfile="full" viewBox="0 0 2854.00 142.50" enableBackground="new 0 0 2854.00 142.50"
-						preserveAspectRatio="preserve">
+						>
 						<path fill="#030409" fillOpacity="1" fillRule="evenodd" strokeWidth="0.2" strokeLinejoin="round"
 							d="M 3,133.5L 3,5.50034L 499.012,5.50034L 571.732,72.5003L 2295.29,71.5003L 2330.02,46.5003L 2851,46.5003L 2851,142.5L 3,142.5" />
 						<line fill="none" strokeWidth="6" strokeLinejoin="round" stroke={ secondaryColor } strokeOpacity="1" x1="2330.02"

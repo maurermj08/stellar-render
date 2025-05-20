@@ -26,9 +26,9 @@ export class CompositionRegistry {
   private compositions = new Map<string, CompositionMetadata>();
 
   register(metadata: CompositionMetadata): void {
-    if (this.compositions.has(metadata.id)) {
-      console.warn(`Overwriting composition with ID "${metadata.id}"`);
-    }
+    // if (this.compositions.has(metadata.id)) {
+    //   console.warn(`Overwriting composition with ID "${metadata.id}"`);
+    // }
     this.compositions.set(metadata.id, metadata);
   }
 
