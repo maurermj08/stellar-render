@@ -225,6 +225,7 @@ export function Queue() {
                             download
                             target="_blank"
                             rel="noopener noreferrer"
+                            aria-label={`Download video ${render.video || 'Unknown Video'}`}
                           >
                             <Download className="h-4 w-4" />
                             <span className="hidden sm:inline">Download</span>

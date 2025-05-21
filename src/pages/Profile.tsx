@@ -199,15 +199,17 @@ const Profile = () => {
                     className="rounded-full h-8 w-8 shadow-lg hover:shadow-red-500/20"
                     onClick={() => setShowRemoveDialog(true)}
                     disabled={loading}
+                    aria-label="Remove profile picture"
                   >
                     <Trash2 className="w-4 h-4" />
                   </Button>
                 </div>
               )}
               <div className="absolute -bottom-2 right-0">
-                <label 
-                  htmlFor="avatar-upload" 
+                <label
+                  htmlFor="avatar-upload"
                   className="flex items-center justify-center h-8 w-8 bg-primary rounded-full cursor-pointer hover:bg-primary/90 transition-colors shadow-lg hover:shadow-primary/20"
+                  aria-label="Upload profile picture"
                 >
                   <Upload className="w-4 h-4 text-white" />
                 </label>
@@ -230,9 +232,10 @@ const Profile = () => {
                 </span>
               </div>
               <div className="mt-3">
-                <Link 
+                <Link
                   to="/change-password"
                   className="inline-flex items-center gap-1 text-sm text-primary hover:text-primary/80 hover:underline"
+                  aria-label="Change your account password"
                 >
                   <LockKeyhole className="w-4 h-4" />
                   Change Password
@@ -243,11 +246,11 @@ const Profile = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {tokenPackages.map((pkg) => (
-              <Card 
-                key={pkg.name} 
+              <Card
+                key={pkg.name}
                 className={`flex flex-col transform transition-all duration-300 ${
-                  pkg.isPopular 
-                    ? 'bg-gradient-to-br from-card to-primary/20 border-primary/30 scale-105 shadow-lg hover:shadow-primary/20' 
+                  pkg.isPopular
+                    ? 'bg-gradient-to-br from-card to-primary/20 border-primary/30 scale-105 shadow-lg hover:shadow-primary/20'
                     : 'border-0'
                 }`}
               >
@@ -270,9 +273,10 @@ const Profile = () => {
                   </div>
                 </CardContent>
                 <CardFooter className="pt-6">
-                  <Button 
+                  <Button
                     className={`w-full ${pkg.isPopular ? 'bg-primary hover:bg-primary/90' : ''}`}
                     onClick={() => handleAddToCart(pkg.name)}
+                    aria-label={`Get ${pkg.name} token package`}
                   >
                     Get {pkg.name} Package
                   </Button>

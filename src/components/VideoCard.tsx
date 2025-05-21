@@ -86,10 +86,10 @@ export const VideoCard = ({
           <div className="w-full h-full bg-black/20 flex items-center justify-center">Preview not available</div>
         )}
         <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-6">
-          <button 
+          <button
             className="p-4 rounded-full bg-primary hover:bg-primary-hover transition-colors"
             title={isPlaying ? (isPaused ? "Play" : "Pause") : "Preview"}
-            aria-label={isPlaying ? (isPaused ? "Play video" : "Pause video") : "Preview video"}
+            aria-label={isPlaying ? (isPaused ? `Play ${name} video preview` : `Pause ${name} video preview`) : `Preview ${name} video`}
             onClick={handlePlayPauseClick}
           >
             {isPlaying ? (
@@ -98,11 +98,11 @@ export const VideoCard = ({
               <Play className="w-6 h-6 sm:w-7 sm:h-7" />
             )}
           </button>
-          <Link 
+          <Link
             to={`/customize/${id}`}
             className="p-4 rounded-full bg-primary hover:bg-primary-hover transition-colors"
-            title="Customize"
-            aria-label="Customize video"
+            title={`Customize ${name}`}
+            aria-label={`Customize ${name} video`}
           >
             <SquarePen className="w-6 h-6 sm:w-7 sm:h-7" />
           </Link>
@@ -111,9 +111,10 @@ export const VideoCard = ({
           {duration ? `${duration}s` : '--:--'}
         </span>
       </div>
-      <Link 
-        to={`/customize/${id}`} 
+      <Link
+        to={`/customize/${id}`}
         className="p-4 flex items-center justify-between"
+        aria-label={`View details and customize ${name} video`}
       >
         <div className="flex items-center gap-2">
           <h3 className="font-semibold text-lg truncate">{name}</h3>
