@@ -335,8 +335,8 @@ export function Customize() {
               <div className="mt-8">
                 <button
                   className="w-full bg-primary text-primary-foreground hover:bg-primary/90 px-4 py-3 rounded-lg font-medium flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
-                  onClick={handleGenerate}
-                  disabled={!session || (profile?.tokens || 0) < 1}
+                  onClick={!session ? () => navigate('/auth') : handleGenerate}
+                  disabled={!session ? false : (profile?.tokens || 0) < 1}
                 >
                   {!session ? (
                     "Please login to generate"
