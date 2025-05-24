@@ -1,7 +1,7 @@
 import { Play, Pause, SquarePen } from "lucide-react";
 import { TokenIcon } from "@/components/icons/TokenIcon";
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Player, Thumbnail } from '@remotion/player';
 
 interface VideoCardProps {
@@ -23,6 +23,16 @@ export const VideoCard = ({
 }: VideoCardProps) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
+  const playerRef = useRef<any>(null);
+
+  useEffect(() => {
+    if (isPlaying && !isPaused && playerRef.current) {
+      playerRef.current.play?.();
+    }
+    if (isPlaying && isPaused && playerRef.current) {
+      playerRef.current.pause?.();
+    }
+  }, [isPaused, isPlaying]);
   
   const handlePlayPauseClick = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -42,13 +52,13 @@ export const VideoCard = ({
     if (isPlaying) {
       return (
         <Player
+          ref={playerRef}
           component={Component}
           inputProps={defaultProps}
           durationInFrames={300}
           fps={30}
           compositionWidth={1920}
           compositionHeight={1080}
-          autoPlay={!isPaused}
           loop
           acknowledgeRemotionLicense={true}
           style={{

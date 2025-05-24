@@ -73,6 +73,8 @@ interface Profile {
 
 export function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [avatarRetryKey, setAvatarRetryKey] = useState(0); // Add retry key state
+  const [cachedAvatarUrl, setCachedAvatarUrl] = useState<string | null>(null);
   const navigate = useNavigate();
   const location = useLocation();
   const queryClient = useQueryClient();
@@ -115,13 +117,38 @@ export function Navbar() {
     refetchOnMount: false,
   });
 
-  // Get public URL for avatar if it exists
-  const avatarUrl = profile?.avatar_url 
-    ? supabase.storage
+  // Get public URL for avatar if it exists, with localStorage caching
+  useEffect(() => {
+    // Try to load from localStorage first
+    const stored = session?.user?.id ? localStorage.getItem(`avatarUrl_${session.user.id}`) : null;
+    if (stored) setCachedAvatarUrl(stored);
+  }, [session?.user?.id]);
+
+  useEffect(() => {
+    // Only update cache if we have a valid avatar_url string
+    if (typeof profile?.avatar_url === 'string' && profile.avatar_url.length > 0) {
+      const url = supabase.storage
         .from('avatars')
-        .getPublicUrl(profile.avatar_url.split('/').pop() || '')
-        .data.publicUrl
-    : null;
+        .getPublicUrl(profile.avatar_url.split('/').pop() || '').data.publicUrl;
+      if (session?.user?.id && url) {
+        localStorage.setItem(`avatarUrl_${session.user.id}`, url);
+        setCachedAvatarUrl(url);
+      }
+    } else if (profile && profile.avatar_url === null && session?.user?.id) {
+      // Only clear cache if avatar_url is explicitly null (user removed avatar)
+      localStorage.removeItem(`avatarUrl_${session.user.id}`);
+      setCachedAvatarUrl(null);
+    }
+  }, [profile?.avatar_url, session?.user?.id, profile]);
+
+  const avatarUrl = cachedAvatarUrl;
+
+  // Handler for avatar image error
+  const handleAvatarError = () => {
+    setTimeout(() => {
+      setAvatarRetryKey((k) => k + 1);
+    }, 500);
+  };
 
   const handleSignOut = async () => {
     await supabase.auth.signOut();
@@ -183,7 +210,11 @@ export function Navbar() {
                   <div className="relative">
                     <div className="absolute inset-0 bg-primary/20 rounded-full blur-lg group-hover:bg-primary/30 transition-colors"></div>
                     <Avatar className="w-8 h-8 relative">
-                      <AvatarImage src={avatarUrl || undefined} />
+                      <AvatarImage 
+                        key={avatarRetryKey}
+                        src={avatarUrl || undefined} 
+                        onError={handleAvatarError}
+                      />
                       <AvatarFallback className="bg-primary/30 text-white font-bold lowercase">
                         {session.user.email?.charAt(0) || ""}
                       </AvatarFallback>

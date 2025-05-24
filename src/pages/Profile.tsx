@@ -81,8 +81,16 @@ const Profile = () => {
           .from('avatars')
           .getPublicUrl(data.avatar_url.split('/').pop() || '');
         setAvatarUrl(publicUrl);
+        // Cache avatar in localStorage
+        if (session?.user?.id && publicUrl) {
+          localStorage.setItem(`avatarUrl_${session.user.id}`, publicUrl);
+        }
       } else {
         setAvatarUrl("");
+        // Remove avatar from localStorage
+        if (session?.user?.id) {
+          localStorage.removeItem(`avatarUrl_${session.user.id}`);
+        }
       }
       setTokens(data.tokens || 0);
     }
@@ -124,6 +132,10 @@ const Profile = () => {
       if (updateError) throw updateError;
 
       setAvatarUrl(publicUrl);
+      // Update avatar cache
+      if (session?.user?.id && publicUrl) {
+        localStorage.setItem(`avatarUrl_${session.user.id}`, publicUrl);
+      }
       queryClient.invalidateQueries({ queryKey: ['profile'] });
       toast({
         title: "Success",
@@ -155,6 +167,10 @@ const Profile = () => {
 
       setAvatarUrl("");
       setShowRemoveDialog(false);
+      // Remove avatar from cache
+      if (session?.user?.id) {
+        localStorage.removeItem(`avatarUrl_${session.user.id}`);
+      }
       queryClient.invalidateQueries({ queryKey: ['profile'] });
       toast({
         title: "Success",
