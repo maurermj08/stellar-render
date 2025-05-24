@@ -16,7 +16,7 @@ export interface FalconTargetingComputerProps {
   gridSpacing: number; // Z-axis distance between front and back grids
   gridThickness: number; // Thickness of grid lines
   gridColor: string; // Color of the grid lines
-  rotationSpeed: number; // Speed of camera rotation animation
+  animationSpeed: number; // Speed of camera rotation animation
 }
 
 export const FalconTargetingComputer: React.FC<FalconTargetingComputerProps> = ({
@@ -33,190 +33,198 @@ export const FalconTargetingComputer: React.FC<FalconTargetingComputerProps> = (
   gridSpacing,
   gridThickness,
   gridColor,
-  rotationSpeed,
+  animationSpeed,
 }) => {
   const frame = useCurrentFrame();
   const { width, height } = useVideoConfig();
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  
+  // Store Three.js instances in refs
+  const sceneRef = useRef<THREE.Scene | undefined>(undefined);
+  const cameraRef = useRef<THREE.PerspectiveCamera | undefined>(undefined);
+  const rendererRef = useRef<THREE.WebGLRenderer | undefined>(undefined);
+  const ovalRef = useRef<THREE.Mesh | undefined>(undefined);
+  const frontGridRef = useRef<THREE.Group | undefined>(undefined);
+  const backGridRef = useRef<THREE.Group | undefined>(undefined);
 
+  // Setup effect - runs once to initialize Three.js instances
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    // Scene setup
+    // Initialize scene
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color(backgroundColor);
+    sceneRef.current = scene;
 
-    // Camera setup - perspective camera for 3D depth perception
+    // Initialize camera
     const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
     camera.position.set(0, 0, 5);
+    cameraRef.current = camera;
+
+    // Initialize renderer
+    const renderer = new THREE.WebGLRenderer({ 
+      canvas, 
+      antialias: true,
+    });
+    renderer.setSize(width, height);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
+    rendererRef.current = renderer;
+
+    // Cleanup on unmount
+    return () => {
+      if (ovalRef.current) {
+        ovalRef.current.geometry.dispose();
+        (ovalRef.current.material as THREE.Material).dispose();
+      }
+      if (frontGridRef.current) {
+        frontGridRef.current.traverse((child) => {
+          if (child instanceof THREE.Mesh) {
+            child.geometry.dispose();
+            (child.material as THREE.Material).dispose();
+          }
+        });
+      }
+      if (backGridRef.current) {
+        backGridRef.current.traverse((child) => {
+          if (child instanceof THREE.Mesh) {
+            child.geometry.dispose();
+            (child.material as THREE.Material).dispose();
+          }
+        });
+      }
+      renderer.dispose();
+      scene.clear();
+    };
+  }, [width, height]);
+
+  // Animation effect - runs every frame
+  useEffect(() => {
+    const scene = sceneRef.current;
+    const camera = cameraRef.current;
+    const renderer = rendererRef.current;
+    if (!scene || !camera || !renderer) return;
+
+    // Update scene background
+    scene.background = new THREE.Color(backgroundColor);
+
+    // Clear previous objects
+    scene.clear();
+
+    // Calculate camera position
+    const fps = 30;
+    const timeInSeconds = frame / fps;
+    const oscillationAmplitude = 30;
+    const oscillationCenter = 90;
+    const oscillationFrequency = animationSpeed / 60;
+    const animatedRotationDegrees = oscillationCenter + 
+      oscillationAmplitude * Math.sin(2 * Math.PI * timeInSeconds * oscillationFrequency);
     
-    // Calculate animated rotation by combining static rotation and animation
-    const fps = 30; // Assuming 30 frames per second, adjust if necessary
-    const animatedRotationDegrees = ovalRotationDegrees + (rotationSpeed * frame) / fps;
     const cameraRotationRadians = (animatedRotationDegrees * Math.PI) / 180;
     camera.position.x = Math.sin(cameraRotationRadians) * 5;
     camera.position.z = Math.cos(cameraRotationRadians) * 5;
     camera.lookAt(0, 0, 0);
 
-    // Renderer setup
-    const renderer = new THREE.WebGLRenderer({ 
-      canvas, 
-      antialias: true,
-      alpha: false
-    });
-    renderer.setSize(width, height);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    renderer.outputColorSpace = THREE.SRGBColorSpace; // Ensure consistent color space
-
-    // Convert pixel dimensions to Three.js units
-    const ovalWidthUnits = (ovalWidthPixels / width) * 4; // Scale to viewport
-    const ovalHeightUnits = (ovalHeightPixels / height) * 4; // Scale to viewport
+    // Create oval
+    const outerRadiusX = (ovalWidthPixels / Math.min(width, height)) * 2;
+    const outerRadiusY = (ovalHeightPixels / Math.min(width, height)) * 2;
     const thicknessUnits = (ovalThicknessPixels / Math.min(width, height)) * 2;
-    
-    // Calculate outer and inner radii for the ring
-    const outerRadiusX = ovalWidthUnits / 2;
-    const outerRadiusY = ovalHeightUnits / 2;
-    const innerRadiusX = Math.max(0.05, outerRadiusX - thicknessUnits); // Min inner radius
-    const innerRadiusY = Math.max(0.05, outerRadiusY - thicknessUnits);
-    
-    // Create the oval outline (ring) - always at Z=0
-    const ovalGeometry = new THREE.RingGeometry(0, 1, 64);
+
+    const ovalGeometry = new THREE.RingGeometry(0.95, 1.0, 64);
     ovalGeometry.scale(outerRadiusX, outerRadiusY, 1);
+
+    const innerRadiusX = outerRadiusX - thicknessUnits;
+    const innerRadiusY = outerRadiusY - thicknessUnits;
+    const innerScale = Math.min(innerRadiusX / outerRadiusX, innerRadiusY / outerRadiusY);
     
-    // Create custom shader material for the ring effect
-    const ringVertexShader = `
-      varying vec2 vUv;
-      void main() {
-        vUv = uv;
-        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-      }
-    `;
-
-    const ringFragmentShader = `
-      varying vec2 vUv;
-      uniform vec3 ovalColor;
-      uniform float opacity;
-      uniform float innerRadiusX;
-      uniform float innerRadiusY;
+    for (let i = 0; i < ovalGeometry.attributes.position.count; i++) {
+      const x = ovalGeometry.attributes.position.getX(i);
+      const y = ovalGeometry.attributes.position.getY(i);
+      const z = ovalGeometry.attributes.position.getZ(i);
       
-      void main() {
-        // Convert UV coordinates to centered coordinates (-1 to 1)
-        vec2 centered = (vUv - 0.5) * 2.0;
-        
-        // Calculate normalized distance for ellipse
-        float outerDist = pow(centered.x, 2.0) + pow(centered.y, 2.0);
-        float innerDist = pow(centered.x / innerRadiusX, 2.0) + pow(centered.y / innerRadiusY, 2.0);
-        
-        // Check if point is within outer ellipse but outside inner ellipse
-        if (outerDist <= 1.0 && innerDist >= 1.0) {
-          gl_FragColor = vec4(ovalColor, opacity);
-        } else {
-          discard;
-        }
+      if (Math.sqrt(x * x + y * y) < 0.975) {
+        ovalGeometry.attributes.position.setXYZ(i, x * innerScale, y * innerScale, z);
       }
-    `;
+    }
+    ovalGeometry.attributes.position.needsUpdate = true;
 
-    const ovalMaterial = new THREE.ShaderMaterial({
-      vertexShader: ringVertexShader,
-      fragmentShader: ringFragmentShader,
-      uniforms: {
-        ovalColor: { value: new THREE.Color(ovalColor) },
-        opacity: { value: 1.0 },
-        innerRadiusX: { value: innerRadiusX / outerRadiusX },
-        innerRadiusY: { value: innerRadiusY / outerRadiusY },
-      },
+    const ovalMaterial = new THREE.MeshBasicMaterial({ 
+      color: ovalColor,
+      side: THREE.DoubleSide,
       transparent: true,
-      side: THREE.DoubleSide, // Back to double-sided rendering
     });
 
     const ovalMesh = new THREE.Mesh(ovalGeometry, ovalMaterial);
     ovalMesh.position.set(ovalPositionX, ovalPositionY, 0);
     ovalMesh.rotation.y = Math.PI / 2;
     scene.add(ovalMesh);
+    ovalRef.current = ovalMesh;
 
-    // Create masking geometry if solid fill is enabled
     if (ovalSolidFill) {
-      // Create a solid ellipse geometry for masking
       const maskGeometry = new THREE.CircleGeometry(1, 64);
-      maskGeometry.scale(outerRadiusX, outerRadiusY, 1);
+      maskGeometry.scale(innerRadiusX, innerRadiusY, 1);
       
-      // Create material that renders background color and blocks depth
       const maskMaterial = new THREE.MeshBasicMaterial({
         color: backgroundColor,
-        transparent: false,
-        depthWrite: true,
-        depthTest: true,
-        side: THREE.DoubleSide, // Back to double-sided rendering
+        side: THREE.DoubleSide,
       });
 
       const maskMesh = new THREE.Mesh(maskGeometry, maskMaterial);
-      maskMesh.position.set(ovalPositionX, ovalPositionY, -0.01); // Further behind to avoid z-fighting
+      maskMesh.position.set(ovalPositionX, ovalPositionY, -0.01);
       maskMesh.rotation.y = Math.PI / 2;
-      maskMesh.renderOrder = -1; // Render before the oval outline
       scene.add(maskMesh);
     }
 
-    // Create grid function - makes a flat 5x5 grid like a piece of paper
+    // Create grid function
     const createGrid = (zPosition: number) => {
       const gridGroup = new THREE.Group();
-      
-      // Convert grid size from pixels to Three.js units
       const gridSizeUnits = (gridSizePixels / Math.min(width, height)) * 4;
       const lineThickness = (gridThickness / Math.min(width, height)) * 2;
       
-      const gridMaterial = new THREE.MeshBasicMaterial({ color: gridColor });
+      const gridMaterial = new THREE.MeshBasicMaterial({ 
+        color: gridColor,
+        transparent: true,
+      });
       
-      // Create 6 lines for 5x5 grid (0,1,2,3,4,5)
       for (let i = 0; i <= 5; i++) {
         const position = (i - 2.5) * (gridSizeUnits / 5);
         
-        // Vertical lines
         const verticalGeometry = new THREE.BoxGeometry(lineThickness, gridSizeUnits, lineThickness);
         const verticalLine = new THREE.Mesh(verticalGeometry, gridMaterial);
         verticalLine.position.set(position, 0, 0);
         gridGroup.add(verticalLine);
         
-        // Horizontal lines
         const horizontalGeometry = new THREE.BoxGeometry(gridSizeUnits, lineThickness, lineThickness);
         const horizontalLine = new THREE.Mesh(horizontalGeometry, gridMaterial);
         horizontalLine.position.set(0, position, 0);
         gridGroup.add(horizontalLine);
       }
-            
+      
       gridGroup.position.z = zPosition;
       return gridGroup;
     };
-    
-    // Create front and back grids (pieces of paper)
-    // Divide gridSpacing by 20 for finer control (0-100 range becomes 0-5 units)
+
     const actualGridSpacing = gridSpacing / 20;
-    
-    const frontGrid = createGrid(actualGridSpacing); // Front paper
-    const backGrid = createGrid(-actualGridSpacing); // Back paper
+    const frontGrid = createGrid(actualGridSpacing);
+    const backGrid = createGrid(-actualGridSpacing);
     
     scene.add(frontGrid);
     scene.add(backGrid);
+    frontGridRef.current = frontGrid;
+    backGridRef.current = backGrid;
 
-    // Render the scene
+    // Render
     renderer.render(scene, camera);
-
-    // Cleanup
-    return () => {
-      ovalGeometry.dispose();
-      ovalMaterial.dispose();
-      renderer.dispose();
-    };
   }, [
-    frame, 
-    width, 
-    height, 
-    backgroundColor, 
-    ovalColor, 
-    ovalWidthPixels, 
-    ovalHeightPixels, 
-    ovalPositionX, 
-    ovalPositionY, 
+    frame,
+    width,
+    height,
+    backgroundColor,
+    ovalColor,
+    ovalWidthPixels,
+    ovalHeightPixels,
+    ovalPositionX,
+    ovalPositionY,
     ovalThicknessPixels,
     ovalRotationDegrees,
     ovalSolidFill,
@@ -224,7 +232,7 @@ export const FalconTargetingComputer: React.FC<FalconTargetingComputerProps> = (
     gridSpacing,
     gridThickness,
     gridColor,
-    rotationSpeed,
+    animationSpeed,
   ]);
 
   return <canvas ref={canvasRef} style={{ display: 'block', width: '100%', height: '100%' }} />;
