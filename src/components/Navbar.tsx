@@ -68,6 +68,9 @@ const TitleLogo = () => {
 interface Profile {
   full_name: string | null;
   avatar_url: string | null;
+}
+
+interface Account {
   tokens: number;
 }
 
@@ -104,8 +107,27 @@ export function Navbar() {
       if (!session?.user?.id) return null;
       const { data, error } = await supabase
         .from('profiles')
-        .select('full_name, avatar_url, tokens')
+        .select('full_name, avatar_url')
         .eq('id', session.user.id)
+        .single();
+      
+      if (error) throw error;
+      return data;
+    },
+    enabled: !!session?.user?.id,
+    staleTime: Infinity,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+  });
+
+  const { data: account } = useQuery<Account | null>({
+    queryKey: ['account', session?.user?.id],
+    queryFn: async () => {
+      if (!session?.user?.id) return null;
+      const { data, error } = await supabase
+        .from('accounts')
+        .select('tokens')
+        .eq('user_id', session.user.id)
         .single();
       
       if (error) throw error;
@@ -205,7 +227,7 @@ export function Navbar() {
                 <Link to="/profile" className="flex items-center gap-2 group">
                   <span className="flex items-center gap-1.5 px-3 py-1.5 bg-card border border-primary/20 rounded-full group-hover:border-primary/30 transition-colors">
                     <TokenIcon className="w-4 h-4" />
-                    <span className="text-sm font-medium">{profile?.tokens || 0}</span>
+                    <span className="text-sm font-medium">{account?.tokens || 0}</span>
                   </span>
                   <div className="relative">
                     <div className="absolute inset-0 bg-primary/20 rounded-full blur-lg group-hover:bg-primary/30 transition-colors"></div>
@@ -279,7 +301,7 @@ export function Navbar() {
                       <span>Profile</span>
                       <div className="flex items-center gap-1">
                         <TokenIcon className="w-4 h-4" />
-                        <span className="text-sm font-medium">{profile?.tokens || 0}</span>
+                        <span className="text-sm font-medium">{account?.tokens || 0}</span>
                       </div>
                     </Link>
                     <button

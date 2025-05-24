@@ -28,7 +28,7 @@ export function Home() {
                 id={composition.id}
                 name={addSpacesToCamelCase(composition.name)}
                 duration={Math.round(composition.durationInFrames / composition.fps)}
-                cost={0}
+                cost={composition.renderCost}
                 component={composition.component}
                 defaultProps={composition.defaultProps}
               />

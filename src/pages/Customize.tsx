@@ -10,6 +10,7 @@ import { useQuery } from '@tanstack/react-query';
 import { add } from 'date-fns';
 import { addSpacesToCamelCase } from "../lib/utils";
 import type { CompositionMetadata } from '../lib/registry';
+import { TokenIcon } from '@/components/icons/TokenIcon';
 
 // Namespace for UUID generation
 const NAMESPACE = "6189bbe8-92e9-4e34-b653-7258e0fc354b";
@@ -77,15 +78,15 @@ export function Customize() {
     },
   });
 
-  // Get user profile for tokens
-  const { data: profile } = useQuery({
-    queryKey: ['profile', session?.user?.id],
+  // Get user account for tokens
+  const { data: account } = useQuery({
+    queryKey: ['account', session?.user?.id],
     queryFn: async () => {
       if (!session?.user?.id) return null;
       const { data, error } = await supabase
-        .from('profiles')
+        .from('accounts')
         .select('tokens')
-        .eq('id', session.user.id)
+        .eq('user_id', session.user.id)
         .single();
       
       if (error) throw error;
@@ -104,6 +105,16 @@ export function Customize() {
       return;
     }
 
+    // Check if user has enough tokens (client-side validation only)
+    if ((account?.tokens || 0) < composition.renderCost) {
+      toast({
+        title: "Error",
+        description: "Not enough tokens to generate video",
+        variant: "destructive",
+      });
+      return;
+    }
+
     try {
       // Generate UUID for the render
       const dataToHash = JSON.stringify({
@@ -112,15 +123,7 @@ export function Customize() {
       });
       const uuid = uuidv5(dataToHash, NAMESPACE);
 
-      // Deduct tokens (cost is temporarily set to 1)
-      const { error: tokenError } = await supabase.rpc('subtract_tokens', {
-        user_id: session.user.id,
-        amount: 1
-      });
-
-      if (tokenError) throw new Error('Failed to process tokens');
-
-      // Create render entry
+      // Create render entry (token deduction will be handled server-side)
       const { error } = await supabase
         .from('renders')
         .insert({
@@ -336,14 +339,20 @@ export function Customize() {
                 <button
                   className="w-full bg-primary text-primary-foreground hover:bg-primary/90 px-4 py-3 rounded-lg font-medium flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                   onClick={!session ? () => navigate('/auth') : handleGenerate}
-                  disabled={!session ? false : (profile?.tokens || 0) < 1}
+                  disabled={!session ? false : (account?.tokens || 0) < composition.renderCost}
                 >
                   {!session ? (
                     "Please login to generate"
-                  ) : (profile?.tokens || 0) < 1 ? (
-                    "Not enough tokens"
+                  ) : (account?.tokens || 0) < composition.renderCost ? (
+                    `Not enough tokens (${composition.renderCost} required)`
                   ) : (
-                    "Generate Video"
+                    <div className="flex items-center gap-2">
+                      <span>Generate Video</span>
+                      <div className="flex items-center gap-1">
+                        <TokenIcon className="w-3 h-3" />
+                        <span className="text-xs font-semibold">{composition.renderCost}</span>
+                      </div>
+                    </div>
                   )}
                 </button>
               </div>

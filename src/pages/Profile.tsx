@@ -19,27 +19,48 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 
-const tokenPackages = [
+const subscriptionTiers = [
   {
-    name: "Popular",
-    tokens: 40,
-    price: 20,
-    value: "$0.50 per token",
-    isPopular: true,
+    name: "Early Free Tier",
+    price: "Always Free",
+    monthlyTokens: 10,
+    storageDuration: "7-day storage",
+    storageCapacity: "200MB storage capacity",
+    features: ["Standard rendering queue"],
+    isEarlyBird: true,
+    buttonText: "Current Plan", // Or "Get Started" if not default
   },
   {
-    name: "Starter",
-    tokens: 1,
-    price: 2,
-    value: "$2.00 per token",
-    isPopular: false,
+    name: "Pro Tier",
+    price: "$3.99/month",
+    monthlyTokens: 20,
+    storageDuration: "90-day storage",
+    storageCapacity: "2GB storage capacity",
+    features: [
+      "Early access to new templates",
+      "Pro Discord community",
+      "Priority rendering queue",
+      "Unused tokens roll over (max 40 tokens)",
+    ],
+    isEarlyBird: false,
+    buttonText: "Choose Pro",
   },
   {
-    name: "Basic",
-    tokens: 5,
-    price: 5,
-    value: "$1.00 per token",
-    isPopular: false,
+    name: "Max Tier",
+    price: "$9.99/month",
+    monthlyTokens: 100,
+    storageDuration: "Unlimited storage duration",
+    storageCapacity: "20GB storage capacity",
+    features: [
+      "Early access + beta features",
+      "Pro Discord community",
+      "Priority rendering queue",
+      "Roadmap input & feature voting",
+      "Direct developer access",
+      "Unused tokens roll over (max 200 tokens)",
+    ],
+    isEarlyBird: false,
+    buttonText: "Choose Max",
   },
 ];
 
@@ -60,26 +81,43 @@ const Profile = () => {
       return;
     }
 
-    const { data, error } = await supabase
+    // Load profile data (avatar_url only)
+    const { data: profileData, error: profileError } = await supabase
       .from('profiles')
-      .select('avatar_url, tokens')
+      .select('avatar_url')
       .eq('id', session.user.id)
       .single();
 
-    if (error) {
+    if (profileError) {
       toast({
         variant: "destructive",
         title: "Error loading profile",
-        description: error.message
+        description: profileError.message
       });
       return;
     }
 
-    if (data) {
-      if (data.avatar_url) {
+    // Load account data (tokens)
+    const { data: accountData, error: accountError } = await supabase
+      .from('accounts')
+      .select('tokens')
+      .eq('user_id', session.user.id)
+      .single();
+
+    if (accountError) {
+      toast({
+        variant: "destructive",
+        title: "Error loading account",
+        description: accountError.message
+      });
+      return;
+    }
+
+    if (profileData) {
+      if (profileData.avatar_url) {
         const { data: { publicUrl } } = supabase.storage
           .from('avatars')
-          .getPublicUrl(data.avatar_url.split('/').pop() || '');
+          .getPublicUrl(profileData.avatar_url.split('/').pop() || '');
         setAvatarUrl(publicUrl);
         // Cache avatar in localStorage
         if (session?.user?.id && publicUrl) {
@@ -92,7 +130,10 @@ const Profile = () => {
           localStorage.removeItem(`avatarUrl_${session.user.id}`);
         }
       }
-      setTokens(data.tokens || 0);
+    }
+
+    if (accountData) {
+      setTokens(accountData.tokens || 0);
     }
 
     setEmail(session.user.email || "");
@@ -137,6 +178,7 @@ const Profile = () => {
         localStorage.setItem(`avatarUrl_${session.user.id}`, publicUrl);
       }
       queryClient.invalidateQueries({ queryKey: ['profile'] });
+      queryClient.invalidateQueries({ queryKey: ['account'] });
       toast({
         title: "Success",
         description: "Avatar updated successfully",
@@ -187,10 +229,10 @@ const Profile = () => {
     }
   };
 
-  const handleAddToCart = (packageName: string) => {
+  const handleChoosePlan = (planName: string) => {
     toast({
-      title: "Added to Cart",
-      description: `${packageName} package has been added to your cart.`,
+      title: "Plan Selected",
+      description: `You've selected the ${planName}. Please proceed to checkout.`, // Placeholder
     });
   };
 
@@ -261,43 +303,47 @@ const Profile = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {tokenPackages.map((pkg) => (
-              <Card
-                key={pkg.name}
-                className={`flex flex-col transform transition-all duration-300 ${
-                  pkg.isPopular
-                    ? 'bg-gradient-to-br from-card to-primary/20 border-primary/30 scale-105 shadow-lg hover:shadow-primary/20'
-                    : 'border-0'
-                }`}
-              >
-                <CardHeader>
-                  <h3 className="text-xl font-bold text-center">{pkg.name}</h3>
-                  {pkg.isPopular && (
-                    <div className="text-center text-sm text-primary mt-2">
-                      Most Popular Choice
+            {subscriptionTiers.map((tier) => (
+              <div className="relative" key={tier.name}>
+                <Card
+                  className={`flex flex-col transform transition-all duration-300 ${
+                    tier.name === "Free Tier" ? 'border-muted' : 'border-0'
+                  }`}
+                >
+                  <CardHeader>
+                    <h3 className="text-xl font-bold text-center">{tier.name}</h3>
+                  </CardHeader>
+                  <CardContent className="flex-grow">
+                    <div className="text-center space-y-2 mb-4">
+                      <div className="text-3xl font-bold">{tier.price}</div>
+                      <div className="flex items-center justify-center gap-2 text-lg">
+                        <TokenIcon className="w-5 h-5 text-primary" />
+                        {tier.monthlyTokens} tokens monthly
+                      </div>
                     </div>
-                  )}
-                </CardHeader>
-                <CardContent className="flex-grow">
-                  <div className="text-center space-y-4">
-                    <div className="text-3xl font-bold">${pkg.price}</div>
-                    <div className="flex items-center justify-center gap-2 text-lg">
-                      <TokenIcon className="w-5 h-5 text-primary" />
-                      {pkg.tokens} {pkg.tokens == 1 ? 'token' : 'tokens'}
-                    </div>
-                    <div className="text-sm text-muted-foreground">{pkg.value}</div>
-                  </div>
-                </CardContent>
-                <CardFooter className="pt-6">
-                  <Button
-                    className={`w-full ${pkg.isPopular ? 'bg-primary hover:bg-primary/90' : ''}`}
-                    onClick={() => handleAddToCart(pkg.name)}
-                    aria-label={`Get ${pkg.name} token package`}
-                  >
-                    Get {pkg.name} Package
-                  </Button>
-                </CardFooter>
-              </Card>
+                    <ul className="space-y-2 text-sm text-muted-foreground">
+                      <li>{tier.storageDuration}</li>
+                      <li>{tier.storageCapacity}</li>
+                      {tier.features.map((feature, index) => (
+                        <li key={index} className="flex items-start">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-2 mt-0.5 h-4 w-4 text-primary flex-shrink-0"><path d="M20 6L9 17l-5-5"/></svg>
+                          {feature}
+                        </li>
+                      ))}
+                    </ul>
+                  </CardContent>
+                  <CardFooter className="pt-6">
+                    <Button
+                      className={`w-full ${tier.name === "Free Tier" ? 'bg-muted hover:bg-muted/90 text-muted-foreground' : 'bg-primary hover:bg-primary/90'}`}
+                      onClick={tier.name === "Free Tier" ? undefined : () => handleChoosePlan(tier.name)}
+                      aria-label={`Choose ${tier.name} plan`}
+                      disabled={tier.name !== "Free Tier"}
+                    >
+                      {tier.name === "Free Tier" ? tier.buttonText : 'Coming Soon'}
+                    </Button>
+                  </CardFooter>
+                </Card>
+              </div>
             ))}
           </div>
         </div>
