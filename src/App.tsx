@@ -4,6 +4,7 @@ import { Preview } from './pages/Preview';
 import { Customize } from './pages/Customize';
 import { Queue } from './pages/Queue';
 import Auth from './pages/Auth';
+import ConfirmEmail from './pages/ConfirmEmail';
 import Profile from './pages/Profile';
 import ResetPassword from './pages/ResetPassword';
 import ChangePassword from './pages/ChangePassword';
@@ -35,6 +36,7 @@ export default function App() {
               <Route path="/customize/:id" element={<Customize />} />
               <Route path="/queue" element={<Queue />} />
               <Route path="/auth" element={<Auth />} />
+              <Route path="/auth/confirm" element={<ConfirmEmail />} />
               <Route path="/profile" element={<Profile />} />
               <Route path="/reset-password" element={<ResetPassword />} />
               <Route path="/change-password" element={<ChangePassword />} />
