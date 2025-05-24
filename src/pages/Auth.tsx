@@ -10,8 +10,10 @@ import { useToast } from "@/components/ui/use-toast";
 const Auth = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [activeTab, setActiveTab] = useState("signin");
+  const [signUpSuccess, setSignUpSuccess] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -19,6 +21,14 @@ const Auth = () => {
     e.preventDefault();
     try {
       setLoading(true);
+      if (password !== confirmPassword) {
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description: "Passwords do not match",
+        });
+        return;
+      }
       const { error: signUpError } = await supabase.auth.signUp({
         email,
         password,
@@ -32,6 +42,7 @@ const Auth = () => {
 
       if (signUpError) throw signUpError;
 
+      setSignUpSuccess(true);
       toast({
         title: "Success!",
         description: "Please check your email to verify your account.",
@@ -39,6 +50,7 @@ const Auth = () => {
 
       setEmail("");
       setPassword("");
+      setConfirmPassword("");
     } catch (error: any) {
       toast({
         variant: "destructive",
@@ -154,32 +166,60 @@ const Auth = () => {
                 </form>
               </TabsContent>
               <TabsContent value="signup">
-                <form onSubmit={handleSignUp} className="space-y-4">
-                  <Input
-                    type="email"
-                    placeholder="Email"
-                    value={email}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
-                    required
-                  />
-                  <Input
-                    type="password"
-                    placeholder="Password"
-                    value={password}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
-                    required
-                  />
-                  <Button type="submit" className="w-full" disabled={loading}>
-                    {loading ? "Loading..." : "Sign Up"}
-                  </Button>
-                  <p className="text-xs text-center text-gray-500">
-                    By creating an account, you agree to our{" "}
-                    <Link to="/terms-of-service" className="underline hover:text-blue-600">
-                      Terms of Service
-                    </Link>
-                    .
-                  </p>
-                </form>
+                {signUpSuccess ? (
+                  <div className="text-center space-y-4 py-8">
+                    <div className="text-green-600 text-lg font-semibold">
+                      ✓ Account Created Successfully!
+                    </div>
+                    <div className="text-gray-600">
+                      We've sent a verification email to your inbox. Please check your email and click the verification link to complete your registration and start creating amazing video!
+                    </div>
+                    <div className="text-sm text-gray-500">
+                      Didn't receive the email? Check your spam folder or{" "}
+                      <button
+                        onClick={() => setSignUpSuccess(false)}
+                        className="text-blue-600 hover:underline"
+                      >
+                        try signing up again
+                      </button>
+                      .
+                    </div>
+                  </div>
+                ) : (
+                  <form onSubmit={handleSignUp} className="space-y-4">
+                    <Input
+                      type="email"
+                      placeholder="Email"
+                      value={email}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
+                      required
+                    />
+                    <Input
+                      type="password"
+                      placeholder="Password"
+                      value={password}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
+                      required
+                    />
+                    <Input
+                      type="password"
+                      placeholder="Confirm Password"
+                      value={confirmPassword}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => setConfirmPassword(e.target.value)}
+                      required
+                    />
+                    <Button type="submit" className="w-full" disabled={loading}>
+                      {loading ? "Loading..." : "Sign Up"}
+                    </Button>
+                    <p className="text-xs text-center text-gray-500">
+                      By creating an account, you agree to our{" "}
+                      <Link to="/terms-of-service" className="underline hover:text-blue-600">
+                        Terms of Service
+                      </Link>
+                      .
+                    </p>
+                  </form>
+                )}
               </TabsContent>
               <TabsContent value="reset">
                 <form onSubmit={handlePasswordReset} className="space-y-4">
