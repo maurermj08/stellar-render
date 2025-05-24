@@ -163,7 +163,14 @@ export function Queue() {
                 <TableRow key={render.id}>
                   <TableCell className="font-medium">
                     <div className="space-y-2">
-                      <div className="text-left">{render.video || "Unknown Video"}</div>
+                      <div className="text-left">
+                        <span className="sm:inline hidden">{render.video || "Unknown Video"}</span>
+                        <span className="sm:hidden inline">
+                          {render.video && render.video.length > 16
+                            ? render.video.slice(0, 13) + "..."
+                            : render.video || "Unknown Video"}
+                        </span>
+                      </div>
                       {render.parameters && Object.keys(render.parameters).length > 0 && (
                         <Collapsible
                           open={openDetails[render.id]}

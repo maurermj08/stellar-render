@@ -549,7 +549,7 @@ export const compositions = {
           shipIndent: 3,
           shipSpeed: 50,
           shipSize: 13,
-          maxShips: 5,
+          maxShips: 3,
           speedVariation: 30,
           shipSizeVariation: 20,
         },
