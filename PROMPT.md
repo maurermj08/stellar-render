@@ -174,3 +174,7 @@ Ensure these settings are appropriate for your project's needs.
 *   **Constants as Parameters**: Lean towards defining potentially configurable values (like animation durations, specific asset URLs if they could change, sizes, etc.) as parameters in your Zod schema. Even if not initially editable, this makes future customization easier.
 
 By following these guidelines, you can efficiently create new, customizable Remotion videos that integrate well with the existing project structure.
+
+
+IF USING THREE.JS USE PERSPECTIVE CAMERA
+IF I DON'T PROVIDE A NAME FOR THE VIDEO COMPONENT STOP AND ASK

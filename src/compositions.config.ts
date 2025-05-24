@@ -13,6 +13,7 @@ import {Planet3DComposition, Planet3DCompSchema} from './compositions/Planet3DCo
 import {GalacticMapComposition, GalacticMapCompSchema} from './compositions/GalacticMapComposition';
 import {SpaceSpiralComposition, SpaceSpiralSchema} from './compositions/SpaceSpiralComposition';
 import { Waves3DComposition, waves3DCompSchema } from './compositions/Waves3DComposition';
+import { FalconTargetingComputerComposition, falconTargetingComputerSchema } from './compositions/FalconTargetingComputerComposition';
 
 export const compositions = {
       Waves3D: {
@@ -519,6 +520,49 @@ export const compositions = {
           numberOfMountainPoints: 23,
         },
         editableFields: ['speed', 'backgroundColor', 'gridColor', 'starColor', 'sunGradientColor1', 'sunGradientColor2', 'sunGradientColor3', 'numberOfStars', 'minStarSize', 'maxStarSize', 'sunDiameter', 'starMovementSpeed', 'numberOfMountainPoints'],
+        renderCost: 0,
+      },
+      FalconTargetingComputer: {
+        component: FalconTargetingComputerComposition,
+        durationInFrames: 600, // 20 seconds at 30 FPS
+        fps: 30,
+        width: 1920,
+        height: 1080,
+        schema: falconTargetingComputerSchema,
+        defaultProps: {
+          backgroundColor: '#a52740',
+          ovalColor: '#fff0c2',
+          gridColor: '#fff0c2',
+          ovalWidthPixels: 750,
+          ovalHeightPixels: 600,
+          ovalPositionX: 0,
+          ovalPositionY: 0,
+          ovalOpacity: 1,
+          ovalThicknessPixels: 32,
+          ovalRotationDegrees: 120,
+          ovalSolidFill: true,
+          gridSizePixels: 1200,
+          gridSpacing: 25,
+          gridThickness: 14,
+          rotationSpeed: 30,
+        },
+        editableFields: [
+          'backgroundColor',
+          'ovalColor',
+          'gridColor',
+          'ovalSolidFill',
+          'ovalWidthPixels',
+          'ovalHeightPixels', 
+          'ovalPositionX',
+          'ovalPositionY',
+          'ovalOpacity',
+          'ovalThicknessPixels',
+          'ovalRotationDegrees',
+          'gridSizePixels',
+          'gridSpacing',
+          'gridThickness',
+          'rotationSpeed'
+        ],
         renderCost: 0,
       }
 } as const;

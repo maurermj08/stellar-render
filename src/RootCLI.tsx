@@ -22,6 +22,7 @@ import {EpicRadarComposition, epicRadarCompSchema} from './compositions/EpicRada
 import {AlertSphereComposition, alertSphereCompSchema} from './compositions/AlertSphereComposition';
 import {SimpleStarsComposition, SimpleStarsSchema} from './compositions/SimpleStarsComposition';
 import {ScifiGridComposition, scifiGridSchema} from './compositions/ScifiGridComposition';
+import {FalconTargetingComputerComposition, falconTargetingComputerSchema} from './compositions/FalconTargetingComputerComposition';
 import './style.css';
 import {compositions} from './compositions.config';
 
