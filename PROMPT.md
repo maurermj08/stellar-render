@@ -177,4 +177,5 @@ By following these guidelines, you can efficiently create new, customizable Remo
 
 
 IF USING THREE.JS USE PERSPECTIVE CAMERA
+NO FRACTIONS FOR PROPS, JUST DIVIDE. I prefer 0-10 or 0-100 settings so adjust accordingly.
 IF I DON'T PROVIDE A NAME FOR THE VIDEO COMPONENT STOP AND ASK
