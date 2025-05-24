@@ -139,6 +139,32 @@ export function Navbar() {
     refetchOnMount: false,
   });
 
+  // Set up realtime subscription for account updates
+  useEffect(() => {
+    if (!session?.user?.id) return;
+
+    const accountSubscription = supabase
+      .channel('account-changes')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'accounts',
+          filter: `user_id=eq.${session.user.id}`
+        },
+        () => {
+          // Invalidate and refetch account data when changes occur
+          queryClient.invalidateQueries({ queryKey: ['account', session.user.id] });
+        }
+      )
+      .subscribe();
+
+    return () => {
+      accountSubscription.unsubscribe();
+    };
+  }, [session?.user?.id, queryClient]);
+
   // Get public URL for avatar if it exists, with localStorage caching
   useEffect(() => {
     // Try to load from localStorage first
