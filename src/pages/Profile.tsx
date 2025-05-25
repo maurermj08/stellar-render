@@ -20,48 +20,48 @@ import {
 } from "@/components/ui/alert-dialog";
 
 const subscriptionTiers = [
-  {
-    name: "Early Free Tier",
-    price: "Always Free",
-    monthlyTokens: 10,
-    storageDuration: "7-day storage",
-    storageCapacity: "200MB storage capacity",
-    features: ["Standard rendering queue"],
-    isEarlyBird: true,
-    buttonText: "Current Plan", // Or "Get Started" if not default
-  },
-  {
-    name: "Pro Tier",
-    price: "$3.99/month",
-    monthlyTokens: 20,
-    storageDuration: "90-day storage",
-    storageCapacity: "2GB storage capacity",
-    features: [
-      "Early access to new templates",
-      "Pro Discord community",
-      "Priority rendering queue",
-      "Unused tokens roll over (max 40 tokens)",
-    ],
-    isEarlyBird: false,
-    buttonText: "Choose Pro",
-  },
-  {
-    name: "Max Tier",
-    price: "$9.99/month",
-    monthlyTokens: 100,
-    storageDuration: "Unlimited storage duration",
-    storageCapacity: "20GB storage capacity",
-    features: [
-      "Early access + beta features",
-      "Pro Discord community",
-      "Priority rendering queue",
-      "Roadmap input & feature voting",
-      "Direct developer access",
-      "Unused tokens roll over (max 200 tokens)",
-    ],
-    isEarlyBird: false,
-    buttonText: "Choose Max",
-  },
+  // {
+  //   name: "Free Tier",
+  //   price: "Always Free",
+  //   monthlyTokens: 5,
+  //   storageDuration: "7-day storage",
+  //   storageCapacity: "200MB storage capacity",
+  //   features: ["Standard rendering queue"],
+  //   isEarlyBird: true,
+  //   buttonText: "Current Plan", 
+  // },
+  // {
+  //   name: "Member Tier",
+  //   price: "$3.99/month",
+  //   monthlyTokens: 20,
+  //   storageDuration: "90-day storage",
+  //   storageCapacity: "2GB storage capacity",
+  //   features: [
+  //     "Early access to new templates",
+  //     "Member Discord community",
+  //     "Priority rendering queue",
+  //     "Unused tokens roll over (max 40 tokens)",
+  //   ],
+  //   isEarlyBird: false,
+  //   buttonText: "Coming Soon",
+  // },
+  // {
+  //   name: "Patron Tier",
+  //   price: "$9.99/month",
+  //   monthlyTokens: 100,
+  //   storageDuration: "Unlimited storage duration",
+  //   storageCapacity: "20GB storage capacity",
+  //   features: [
+  //     "Early access + beta features",
+  //     "Member Discord community",
+  //     "Priority rendering queue",
+  //     "Roadmap input & feature voting",
+  //     "Direct developer access",
+  //     "Unused tokens roll over (max 200 tokens)",
+  //   ],
+  //   isEarlyBird: false,
+  //   buttonText: "Coming Soon",
+  // },
 ];
 
 const Profile = () => {
@@ -339,7 +339,7 @@ const Profile = () => {
                       aria-label={`Choose ${tier.name} plan`}
                       disabled={tier.name !== "Free Tier"}
                     >
-                      {tier.name === "Free Tier" ? tier.buttonText : 'Coming Soon'}
+                      {tier.buttonText}
                     </Button>
                   </CardFooter>
                 </Card>
