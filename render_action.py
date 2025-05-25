@@ -165,11 +165,21 @@ def main(continuous):
             results = response.json()
         except requests.RequestException as e:
             print(f"Error: Failed to connect to Supabase API: {e}")
-            exit(1)
+            if not continuous:
+                exit(1)
+            else:
+                print("Continuing in continuous mode...")
+                time.sleep(60)
+                continue
         except json.JSONDecodeError:
             print("Error: Invalid JSON response from Supabase")
             print(f"Response: {response.text}")
-            exit(1)
+            if not continuous:
+                exit(1)
+            else:
+                print("Continuing in continuous mode...")
+                time.sleep(60)
+                continue
         
         # Check if results is empty
         if not results:

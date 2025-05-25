@@ -11,6 +11,7 @@ interface ScifiGridProps {
   scanLineThickness?: number;
   scanLineGlow?: number;
   numberOfLines?: number;
+  gridLineThickness?: number;
 }
 
 // Helper function to convert any color format to rgba
@@ -41,6 +42,7 @@ export const ScifiGrid: React.FC<ScifiGridProps> = ({
   scanLineThickness = 4,
   scanLineGlow = 20,
   numberOfLines = 1,
+  gridLineThickness = 2,
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const frame = useCurrentFrame();
@@ -61,7 +63,7 @@ export const ScifiGrid: React.FC<ScifiGridProps> = ({
 
     // Draw grid
     ctx.strokeStyle = gridColor;
-    ctx.lineWidth = 1;
+    ctx.lineWidth = gridLineThickness;
 
     // Draw vertical lines
     for (let x = 0; x <= width; x += gridSpacing) {
@@ -143,7 +145,7 @@ export const ScifiGrid: React.FC<ScifiGridProps> = ({
       ctx.restore();
     }
 
-  }, [frame, backgroundColor, gridColor, scanLineColor, animationSpeed, gridSpacing, scanAngle, scanLineThickness, scanLineGlow, numberOfLines]);
+  }, [frame, backgroundColor, gridColor, scanLineColor, animationSpeed, gridSpacing, scanAngle, scanLineThickness, scanLineGlow, numberOfLines, gridLineThickness]);
 
   return (
     <div className="w-full h-full bg-black flex items-center justify-center">
@@ -155,4 +157,4 @@ export const ScifiGrid: React.FC<ScifiGridProps> = ({
       />
     </div>
   );
-}; 
+};

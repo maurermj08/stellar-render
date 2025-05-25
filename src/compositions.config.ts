@@ -523,8 +523,9 @@ export const compositions = {
           animationSpeed: 20,
           gridSpacing: 50,
           scanAngle: 0,
+          gridLineThickness: 2,
         },
-        editableFields: ['backgroundColor', 'gridColor', 'scanLineColor', 'animationSpeed', 'gridSpacing', 'scanAngle'],
+        editableFields: ['backgroundColor', 'gridColor', 'scanLineColor', 'animationSpeed', 'gridSpacing', 'scanAngle', 'gridLineThickness'],
         renderCost: 1,
       },
       HothLaser: {

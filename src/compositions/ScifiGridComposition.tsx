@@ -13,6 +13,7 @@ export const scifiGridSchema = z.object({
   scanLineThickness: z.number().min(1).max(20).default(4),
   scanLineGlow: z.number().min(5).max(50).default(20),
   numberOfLines: z.number().min(1).max(8).default(1),
+  gridLineThickness: z.number().min(1).max(10).default(2),
 });
 
 export const ScifiGridComposition: React.FC<z.infer<typeof scifiGridSchema>> = ({
@@ -25,6 +26,7 @@ export const ScifiGridComposition: React.FC<z.infer<typeof scifiGridSchema>> = (
   scanLineThickness,
   scanLineGlow,
   numberOfLines,
+  gridLineThickness,
 }) => {
   return (
     <AbsoluteFill className="bg-black">
@@ -38,7 +40,8 @@ export const ScifiGridComposition: React.FC<z.infer<typeof scifiGridSchema>> = (
         scanLineThickness={scanLineThickness}
         scanLineGlow={scanLineGlow}
         numberOfLines={numberOfLines}
+        gridLineThickness={gridLineThickness}
       />
     </AbsoluteFill>
   );
-}; 
+};
