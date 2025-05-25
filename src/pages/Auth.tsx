@@ -34,11 +34,12 @@ const Auth = () => {
 
       toast({
         title: "Success!",
-        description: "Please check your email to verify your account.",
+        description: "Successfully signed up. Welcome to Stellar Videos!",
       });
 
       setEmail("");
       setPassword("");
+      navigate("/");
     } catch (error: any) {
       toast({
         variant: "destructive",
