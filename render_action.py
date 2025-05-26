@@ -10,6 +10,7 @@ from botocore.client import Config
 from dotenv import load_dotenv
 import argparse
 import time
+import socket
 
 def load_composition_costs():
     """Load composition render costs from the TypeScript config file"""
@@ -112,9 +113,83 @@ def update_render_status(render_id, status, error_message=None):
         print(f"Error updating render status: {e}")
         return False
 
-def main(continuous):
+def update_worker_status(worker_name, render_count):
+    """Update or create worker status in the workers table"""
+    try:
+        current_timestamp = datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%S%z")
+        
+        # First, try to get existing worker
+        response = requests.get(
+            f"{os.environ['PUBLIC_SUPABASE_URL']}/rest/v1/workers?name=eq.{worker_name}",
+            headers={
+                "apikey": os.environ["SERVICE_ROLE_KEY"],
+                "Authorization": f"Bearer {os.environ['SERVICE_ROLE_KEY']}"
+            }
+        )
+        
+        if response.status_code == 200:
+            workers = response.json()
+            
+            if workers:
+                # Worker exists, update it
+                worker_id = workers[0]['id']
+                update_response = requests.patch(
+                    f"{os.environ['PUBLIC_SUPABASE_URL']}/rest/v1/workers?id=eq.{worker_id}",
+                    headers={
+                        "apikey": os.environ["SERVICE_ROLE_KEY"],
+                        "Authorization": f"Bearer {os.environ['SERVICE_ROLE_KEY']}",
+                        "Content-Type": "application/json"
+                    },
+                    json={
+                        "last_checked": current_timestamp,
+                        "renders": render_count
+                    }
+                )
+                
+                if update_response.status_code == 204:
+                    print(f"Successfully updated worker {worker_name} status")
+                    return True
+                else:
+                    print(f"Error updating worker status: {update_response.text}")
+                    return False
+            else:
+                # Worker doesn't exist, create it
+                create_response = requests.post(
+                    f"{os.environ['PUBLIC_SUPABASE_URL']}/rest/v1/workers",
+                    headers={
+                        "apikey": os.environ["SERVICE_ROLE_KEY"],
+                        "Authorization": f"Bearer {os.environ['SERVICE_ROLE_KEY']}",
+                        "Content-Type": "application/json"
+                    },
+                    json={
+                        "name": worker_name,
+                        "last_checked": current_timestamp,
+                        "renders": render_count
+                    }
+                )
+                
+                if create_response.status_code == 201:
+                    print(f"Successfully created worker {worker_name} entry")
+                    return True
+                else:
+                    print(f"Error creating worker entry: {create_response.text}")
+                    return False
+        else:
+            print(f"Error querying workers table: {response.text}")
+            return False
+            
+    except Exception as e:
+        print(f"Error updating worker status: {e}")
+        return False
+
+def main(continuous, worker_name):
     # Load environment variables from .env file
     load_dotenv()
+    
+    # Initialize render counter
+    total_renders = 0
+    
+    print(f"Starting worker: {worker_name}")
     
     # Check and install Remotion dependencies
     print("Checking and installing Remotion dependencies...")
@@ -148,6 +223,9 @@ def main(continuous):
     RENDER_TABLE_NAME = "renders"
     
     while True:
+        # Update worker status at the beginning of each cycle
+        update_worker_status(worker_name, total_renders)
+        
         # Query parameters (optional) - need to include user_id
         RENDER_QUERY_PARAMS = "select=*,user_id&started_timestamp=is.null&limit=5"
         
@@ -345,6 +423,7 @@ def main(continuous):
                     if update_response.status_code == 204:
                         print(f"Successfully updated finished_timestamp for render with ID {render_id}")
                         successful_renders += 1
+                        total_renders += 1  # Increment total render counter
                     else:
                         print(f"Error updating finished_timestamp for render with ID {render_id}")
                         print(f"Response: {update_response.text}")
@@ -365,8 +444,11 @@ def main(continuous):
                 print(f"Error: Remotion render failed for video {video} with UUID {uuid}. Skipping this entry.")
                 failed_renders += 1
         
+        # Update worker status after processing batch
+        update_worker_status(worker_name, total_renders)
+        
         # Update the final message
-        print(f"Batch completed. Successful renders: {successful_renders}, Failed renders: {failed_renders}")
+        print(f"Batch completed. Successful renders: {successful_renders}, Failed renders: {failed_renders}, Total renders: {total_renders}")
         
         # If not in continuous mode, exit after one run
         if not continuous:
@@ -383,7 +465,13 @@ if __name__ == "__main__":
         action="store_true",
         help="Run in continuous mode, checking for new renders every few seconds."
     )
+    parser.add_argument(
+        "-n", "--name",
+        type=str,
+        default=socket.gethostname(),
+        help="Name of the worker (defaults to hostname)"
+    )
     args = parser.parse_args()
     
-    # Call the main function with the continuous flag
-    main(args.run_continuous)
+    # Call the main function with the continuous flag and worker name
+    main(args.run_continuous, args.name)
