@@ -222,7 +222,7 @@ export const compositions = {
       },
       AlertSphere: {
         component: AlertSphereComposition,
-        durationInFrames: 900,
+        durationInFrames: 30 * 60 * 2,
         fps: 30,
         width: 1920,
         height: 1080,
