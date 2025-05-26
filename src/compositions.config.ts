@@ -252,7 +252,7 @@ export const compositions = {
       },
       SimpleStars: {
         component: SimpleStarsComposition,
-        durationInFrames: 300,
+        durationInFrames: 30 * 60,
         fps: 30,
         width: 1920,
         height: 1080,
@@ -267,7 +267,7 @@ export const compositions = {
       },
       SpaceGauges: {
         component: SpaceGaugesComposition,
-        durationInFrames: 300,
+        durationInFrames: 30 * 60,
         fps: 30,
         width: 1920,
         height: 1080,
@@ -530,7 +530,7 @@ export const compositions = {
       },
       HothLaser: {
         component: HothLaserComposition,
-        durationInFrames: 300,
+        durationInFrames: 30 * 60,
         fps: 30,
         width: 1920,
         height: 1080,
