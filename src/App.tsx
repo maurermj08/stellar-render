@@ -9,6 +9,7 @@ import Profile from './pages/Profile';
 import ResetPassword from './pages/ResetPassword';
 import ChangePassword from './pages/ChangePassword';
 import TermsOfService from './pages/TermsOfService';
+import { Status } from './pages/Status';
 import { Navbar } from './components/Navbar';
 import { registerCompositionsFromConfig } from "./lib/registry";
 import { compositions } from "./compositions.config";
@@ -42,6 +43,7 @@ export default function App() {
               <Route path="/change-password" element={<ChangePassword />} />
               <Route path="/terms-of-service" element={<TermsOfService />} />
               <Route path="/support" element={<Support />} />
+              <Route path="/status" element={<Status />} />
             </Routes>
           </main>
           <Toaster />
