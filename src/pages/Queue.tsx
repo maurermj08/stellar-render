@@ -219,25 +219,58 @@ export function Queue() {
                     )}
                   </TableCell>
                   <TableCell>
-                    <div className="flex justify-start">
+                    <div className="flex flex-col sm:flex-row justify-start gap-2">
                       {render.finished_timestamp && (
-                        <Button
-                          variant="secondary"
-                          size="sm"
-                          className="flex items-center gap-2"
-                          asChild
-                        >
-                          <a
-                            href={`https://stellarvideos.nyc3.digitaloceanspaces.com/stellarvideos/videos/${render.uuid}.mp4`}
-                            download
-                            target="_blank"
-                            rel="noopener noreferrer"
+                        <>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="flex items-center gap-2 w-full sm:w-auto"
+                            asChild
+                          >
+                            <a
+                              href={`https://stellarvideos.nyc3.digitaloceanspaces.com/stellarvideos/videos/${render.uuid}.mp4`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              aria-label={`View video ${render.video || 'Unknown Video'}`}
+                            >
+                              <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                              </svg>
+                              <span className="hidden sm:inline">View</span>
+                            </a>
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="flex items-center gap-2 w-full sm:w-auto"
+                            onClick={async () => {
+                              const url = `https://stellarvideos.nyc3.digitaloceanspaces.com/stellarvideos/videos/${render.uuid}.mp4`;
+                              const filename = `${render.video || 'video'}.mp4`;
+                              
+                              try {
+                                const response = await fetch(url);
+                                const blob = await response.blob();
+                                const link = document.createElement('a');
+                                link.href = URL.createObjectURL(blob);
+                                link.download = filename;
+                                document.body.appendChild(link);
+                                link.click();
+                                document.body.removeChild(link);
+                                URL.revokeObjectURL(link.href);
+                              } catch (error) {
+                                console.error('Download failed:', error);
+                                // Fallback to opening in new tab
+                                window.open(url, '_blank');
+                              }
+                            }}
                             aria-label={`Download video ${render.video || 'Unknown Video'}`}
                           >
                             <Download className="h-4 w-4" />
                             <span className="hidden sm:inline">Download</span>
-                          </a>
-                        </Button>
+                          </Button>
+                        </>
                       )}
                     </div>
                   </TableCell>
