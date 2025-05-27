@@ -34,6 +34,7 @@ type RenderItem = {
 
 export function Queue() {
   const [openDetails, setOpenDetails] = useState<Record<string, boolean>>({});
+  const [downloading, setDownloading] = useState<Record<string, boolean>>({});
   const queryClient = useQueryClient();
 
   useEffect(() => {
@@ -249,6 +250,7 @@ export function Queue() {
                               const url = `https://stellarvideos.nyc3.digitaloceanspaces.com/stellarvideos/videos/${render.uuid}.mp4`;
                               const filename = `${render.video || 'video'}.mp4`;
                               
+                              setDownloading(prev => ({ ...prev, [render.id]: true }));
                               try {
                                 const response = await fetch(url);
                                 const blob = await response.blob();
@@ -263,12 +265,20 @@ export function Queue() {
                                 console.error('Download failed:', error);
                                 // Fallback to opening in new tab
                                 window.open(url, '_blank');
+                              } finally {
+                                setDownloading(prev => ({ ...prev, [render.id]: false }));
                               }
                             }}
                             aria-label={`Download video ${render.video || 'Unknown Video'}`}
                           >
-                            <Download className="h-4 w-4" />
-                            <span className="hidden sm:inline">Download</span>
+                            {downloading[render.id] ? (
+                              <Loader className="h-4 w-4 animate-spin" />
+                            ) : (
+                              <Download className="h-4 w-4" />
+                            )}
+                            <span className="hidden sm:inline">
+                              {downloading[render.id] ? "Downloading..." : "Download"}
+                            </span>
                           </Button>
                         </>
                       )}
