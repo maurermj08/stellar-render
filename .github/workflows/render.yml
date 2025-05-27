@@ -1,8 +1,6 @@
 name: Render Videos
 
 on:
-  schedule:
-    - cron: '0 0 * * *'  # Run once a day at midnight
   workflow_dispatch:  # Allow manual triggering
 
 jobs:
