@@ -67,8 +67,8 @@
     "zod": "3.22.3"
   },
   "optionalDependencies": {
-    "@remotion/compositor-linux-x64-gnu": "^4.0.310",
-    "@remotion/compositor-linux-x64-musl": "^4.0.310",
+    "@remotion/compositor-linux-x64-gnu": "^4.0.311",
+    "@remotion/compositor-linux-x64-musl": "^4.0.311",
     "@rollup/rollup-linux-x64-gnu": "latest"
   }
 }

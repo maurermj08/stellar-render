@@ -14,6 +14,7 @@ import {GalacticMapComposition, GalacticMapCompSchema} from './compositions/Gala
 import {SpaceSpiralComposition, SpaceSpiralSchema} from './compositions/SpaceSpiralComposition';
 import { Waves3DComposition, waves3DCompSchema } from './compositions/Waves3DComposition';
 import { FalconTargetingComputerComposition, falconTargetingComputerSchema } from './compositions/FalconTargetingComputerComposition';
+import { SignalDecoderComposition, signalDecoderCompositionSchema } from './compositions/SignalDecoderComposition';
 
 export const compositions = {
       Waves3D: {
@@ -566,6 +567,118 @@ export const compositions = {
         },
         editableFields: ['speed', 'backgroundColor', 'gridColor', 'starColor', 'sunGradientColor1', 'sunGradientColor2', 'sunGradientColor3', 'numberOfStars', 'minStarSize', 'maxStarSize', 'sunDiameter', 'starMovementSpeed', 'numberOfMountainPoints'],
         renderCost: 1,
+      },
+      SignalDecoder: {
+        name: 'Signal Decoder',
+        component: SignalDecoderComposition,
+        schema: signalDecoderCompositionSchema,
+        durationInFrames: 15 * 60 * 1,
+        fps: 15,
+        width: 1920,
+        height: 1080,
+        defaultProps: {
+          backgroundColor: 'rgb(0,0,0)',
+          primaryColor: '#00BFFF',         // Main structural elements (grids, borders, highlighted elements, traveling rect, main bars)
+          secondaryColor: '#66AAFF',       // Secondary bars, wave colors
+          primaryTextColor: '#4DC8FF',     // Headers, labels, main messages (DECODING, FREQ., scrolling messages)
+          secondaryTextColor: '#A0DFFF',   // Secondary content (random decoding text, frequency numbers)
+          accentColor: '#F0F8FF',          // Very light blue elements, almost white
+          dashboardWidth: 1920,
+          dashboardHeight: 1080,
+          hexagonPadding: 4,
+          hexagonBorderThickness: 6,
+          hexagonBlurStdDeviation: 2,
+          fuzzyBlurStdDeviation: 3,
+          labelFontSize: 38,
+          textFontFamily: "'HandelGotDMed Regular', Arial, sans-serif",
+          labelFontFamily: "'Chandrila', 'HandelGothic Regular', Arial, sans-serif",
+          gridLineWidth: 1,
+          gridLineOpacity: 0.5,
+          travelingRectHeight: 120,
+          travelingRectSpeedMultiplier: 2,
+          barsRoundedEnds: true,
+          barBorderRadius: 5,
+          barWidth1: 10,
+          barSpacing1: 5,
+          barMaxHeight1: 360,
+          barMinHeight1: 30,
+          barAnimationSpeedMultiplier1: 0.8,
+          barWidth2: 10,
+          barSpacing2: 5,
+          barMaxHeight2: 160,
+          barMinHeight2: 30,
+          barAnimationSpeedMultiplier2: 1,
+          oscilloscopeGlobalSpeed: 1.0,
+          tracePointLifetimeFrames: 150,
+          tracePointSpawnIntervalFrames: 3,
+          tracePointSize: 11,
+          tracePointSizeVariation: 0.3,
+          wave1Opacity: 0.9,
+          wave1AmplitudeFactor: 0.3,
+          wave1Frequency: 120,
+          wave1SpeedFactor: 3.0,
+          wave1TimeOffset: 2.0,
+          wave1Type: 'sine',
+          wave2Opacity: 0.7,
+          wave2AmplitudeFactor: 0.25,
+          wave2Frequency: 80,
+          wave2SpeedFactor: 3.2,
+          wave2TimeOffset: 1.5,
+          wave2Type: 'cosine',
+          wave3Opacity: 0.8,
+          wave3AmplitudeFactor: 0.7,
+          wave3Frequency: 150,
+          wave3SpeedFactor: 3.5,
+          wave3TimeOffset: 2.2,
+          wave3Type: 'sine',
+          wave4Opacity: 0.5,
+          wave4AmplitudeFactor: 0.35,
+          wave4Frequency: 90,
+          wave4SpeedFactor: 6.0,
+          wave4TimeOffset: 2.5,
+          wave4Type: 'sawtooth',
+          textLineFontSize: 24,
+          textMaxLines: 21,
+          textFadeOutDurationFrames: 100,
+          textNewMessageIntervalFrames: 15,
+          initialMessages: [
+            "Systems initializing...",
+            "Communications array online",
+            "Awaiting command protocols"
+          ],
+          dynamicMessages: [
+            "Hyperspace coordinates locked",
+            "Ion engine running at optimal levels",
+            "Deflector shields at maximum strength", 
+            "Scanning for hostile vessels in sector",
+            "Life support systems functioning normally",
+            "Navigation computer online and ready",
+            "Quantum flux stabilizers engaged",
+            "Long-range communications established",
+            "Gravitational field generators active",
+            "Plasma conduits operating within parameters"
+          ],
+          decodingTextFontSize: 36,
+          decodingRandomTextFontSize: 36,
+          decodingTextFontFamily: 'HandelGotDMed Regular, Arial, sans-serif',
+          decodingLineThickness: 3,
+          decodingRandomTextUpdateIntervalFrames: 30,
+          frequencyTextFontSize: 30,
+          frequencyNumberFontSize: 28,
+          frequencyNumberUpdateIntervalFrames: 10,
+          useAurekBesh: true,
+        },
+        editableFields: [
+          'backgroundColor',
+          'primaryColor',
+          'secondaryColor',
+          'accentColor',
+          'primaryTextColor',
+          'secondaryTextColor',
+          'travelingRectSpeedMultiplier',
+          'useAurekBesh'
+        ],
+        renderCost: 2,
       }
 } as const;
 
